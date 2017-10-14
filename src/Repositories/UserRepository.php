@@ -1,0 +1,95 @@
+<?php
+
+namespace Preferans\Oauth\Repositories;
+
+use League\OAuth2\Server\Entities\UserEntityInterface;
+use Phalcon\Security;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Exception\OAuthServerException;
+use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use Preferans\Oauth\Entities\UserEntity;
+
+/**
+ * Preferans\Oauth\Repositories\UserRepository
+ *
+ * @package Preferans\Oauth\Repositories
+ */
+class UserRepository extends AbstractRepository implements UserRepositoryInterface
+{
+    use Traits\UserAwareTrait, Traits\GrantsAwareTrait, Traits\UserGrantsAwareTrait;
+
+    protected $limitUsersToClients;
+    protected $limitUsersToGrants;
+
+    /**
+     * ScopeRepository constructor.
+     *
+     * @param bool $limitUsersToClients
+     * @param bool $limitUsersToGrants
+     */
+    public function __construct($limitUsersToClients = true, $limitUsersToGrants = true)
+    {
+        $this->limitUsersToClients = (bool)$limitUsersToClients;
+        $this->limitUsersToGrants = (bool)$limitUsersToGrants;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string                $username
+     * @param string                $password
+     * @param string                $grantType The grant type used
+     * @param ClientEntityInterface $client
+     *
+     * @return UserEntityInterface
+     * @throws OAuthServerException
+     */
+    public function getUserEntityByUserCredentials($username, $password, $grantType, ClientEntityInterface $client)
+    {
+        $builder = $this->createQueryBuilder()
+            ->columns(['u.id', 'u.username', 'u.password'])
+            ->addFrom($this->getUserModelClass(), 'u')
+            ->where('u.username = :username:', compact('username'))
+            ->limit(1);
+
+        if ($this->limitUsersToGrants) {
+            $builder
+                ->innerJoin($this->getUserGrantsModelClass(), 'UserGrant.user_id = User.id', 'UserGrant')
+                ->innerJoin($this->getGrantsModelClass(), 'Grant.id = UserGrant.grant_id', 'Grant')
+                ->andWhere('Grant.id = :grantType:', compact('grantType'));
+        }
+
+        $query = $builder->getQuery();
+        $result = $query->execute();
+
+        if ($result->count() <= 0) {
+            throw OAuthServerException::invalidCredentials();
+        }
+
+        $result = $result->getFirst();
+        $security = $this->getSecurity();
+
+        if ($security->checkHash($password, $result->password) !== true) {
+            throw OAuthServerException::invalidCredentials();
+        }
+
+        $user = new UserEntity();
+        $user->setIdentifier($result->id);
+
+        return $user;
+    }
+
+    /**
+     * Gets Security component.
+     *
+     * @return Security
+     */
+    protected function getSecurity()
+    {
+        if (!$this->getDI()->has('security')) {
+            $this->getDI()->set('security', Security::class);
+        }
+
+        return $this->getDI()->get('security');
+    }
+}
