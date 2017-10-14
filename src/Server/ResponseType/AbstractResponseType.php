@@ -2,6 +2,7 @@
 
 namespace Preferans\Oauth\Server\ResponseType;
 
+use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\CryptTrait;
 use Preferans\Oauth\Server\ResponseTypeInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
@@ -17,14 +18,19 @@ abstract class AbstractResponseType implements ResponseTypeInterface
     use CryptTrait;
 
     /**
-     * @var AccessTokenEntityInterface
+     * @var AccessTokenEntityInterface|null
      */
     protected $accessToken;
 
     /**
-     * @var RefreshTokenEntityInterface
+     * @var RefreshTokenEntityInterface|null
      */
     protected $refreshToken;
+
+    /**
+     * @var CryptKey|null
+     */
+    protected $privateKey;
 
     /**
      * {@inheritdoc}
@@ -44,5 +50,15 @@ abstract class AbstractResponseType implements ResponseTypeInterface
     public function setRefreshToken(RefreshTokenEntityInterface $refreshToken)
     {
         $this->refreshToken = $refreshToken;
+    }
+
+    /**
+     * Set the private key
+     *
+     * @param CryptKey $key
+     */
+    public function setPrivateKey(CryptKey $key)
+    {
+        $this->privateKey = $key;
     }
 }
