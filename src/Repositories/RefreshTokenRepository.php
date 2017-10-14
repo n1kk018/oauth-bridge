@@ -41,7 +41,7 @@ class RefreshTokenRepository extends AbstractRepository implements RefreshTokenR
             [
                 'id'              => $refreshTokenEntity->getIdentifier(),
                 'access_token_id' => $refreshTokenEntity->getAccessToken()->getIdentifier(),
-                'expires'         => $refreshTokenEntity->getExpiryDateTime()->format('Y-m-d H:i:s'),
+                'expiration'      => $refreshTokenEntity->getExpiryDateTime()->format('Y-m-d H:i:s'),
             ]
         );
 
