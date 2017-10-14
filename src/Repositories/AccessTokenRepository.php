@@ -66,10 +66,11 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
             }
         }
 
-        if ($accessToken = $this->findByIdentity($accessTokenEntity->getIdentifier())) {
+        if ($this->findByIdentity($accessTokenEntity->getIdentifier())) {
             throw UniqueTokenIdentifierConstraintViolationException::create();
         }
 
+        $accessToken = $this->createAccessTokensModel();
         $accessToken->assign(
             [
                 'id'         => $accessTokenEntity->getIdentifier(),
@@ -99,7 +100,7 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
 
         $accessToken->revoked = 1;
         if (!$accessToken->update()) {
-            throw new Exceptions\EntityException('Unable to revoke access token entity');
+            throw new Exceptions\EntityException('Unable to revoke access token');
         }
     }
 
@@ -112,7 +113,7 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        $accessToken = $this->createAccessTokenModel();
+        $accessToken = $this->createAccessTokensModel();
 
         $revoked = $accessToken::count([
             'conditions' => 'id = :identity: AND (revoked = 1 OR expiration <= ":expiration:")',

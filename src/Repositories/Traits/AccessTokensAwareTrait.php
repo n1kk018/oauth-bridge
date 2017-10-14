@@ -42,7 +42,7 @@ trait AccessTokensAwareTrait
     }
 
     /**
-     * Tries to get AccessToken for the database.
+     * Tries to get AccessToken from the database.
      *
      * @param $identity
      *
@@ -50,7 +50,7 @@ trait AccessTokensAwareTrait
      */
     protected function findByIdentity($identity)
     {
-        $accessToken = $this->createAccessTokenModel();
+        $accessToken = $this->createAccessTokensModel();
 
         $accessToken = $accessToken::findFirst([
             'conditions' => 'id = :identity:',
@@ -61,11 +61,11 @@ trait AccessTokensAwareTrait
     }
 
     /**
-     * Creates a new AccessToken Model instance.
+     * Creates a AccessToken Model instance.
      *
      * @return ModelInterface
      */
-    protected function createAccessTokenModel(): ModelInterface
+    protected function createAccessTokensModel(): ModelInterface
     {
         $accessTokenModelClass = $this->getAccessTokensModelClass();
 
