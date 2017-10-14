@@ -15,7 +15,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
  */
 class ScopeRepository extends AbstractRepository implements ScopeRepositoryInterface
 {
-    use Traits\ScopeAwareTrait, Traits\GrantScopesAwareTrait, Traits\GrantAwareTrait, Traits\ClientAwareTrait;
+    use Traits\ScopeAwareTrait, Traits\GrantScopesAwareTrait, Traits\GrantsAwareTrait, Traits\ClientAwareTrait;
     use Traits\ClientScopesAwareTrait, Traits\UserAwareTrait, Traits\UserScopesAwareTrait;
 
     protected $limitScopesToGrants;
@@ -46,13 +46,6 @@ class ScopeRepository extends AbstractRepository implements ScopeRepositoryInter
      */
     public function getScopeEntityByIdentifier($identifier)
     {
-        $parameters = [
-            'conditions' => 'id = ?1',
-            'bind'       => [
-                1 => $identifier,
-            ],
-        ];
-
         $result = $this->createQueryBuilder()
             ->columns(['s.id'])
             ->addFrom($this->getScopeModelClass(), 's')
@@ -105,7 +98,7 @@ class ScopeRepository extends AbstractRepository implements ScopeRepositoryInter
         if ($this->limitScopesToGrants) {
             $builder
                 ->innerJoin($this->getGrantScopesModelClass(), 'gs.scope_id = s.id', 'gs')
-                ->innerJoin($this->getGrantModelClass(), 'g.id = gs.grant_id', 'g')
+                ->innerJoin($this->getGrantsModelClass(), 'g.id = gs.grant_id', 'g')
                 ->andWhere('g.id = :grantType:', compact('grantType'));
         }
 
