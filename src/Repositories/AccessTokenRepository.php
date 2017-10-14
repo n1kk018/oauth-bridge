@@ -2,11 +2,10 @@
 
 namespace Preferans\Oauth\Repositories;
 
-use Phalcon\Mvc\ModelInterface;
 use Preferans\Oauth\Exceptions;
 use League\OAuth2\Server\Entities;
 use Preferans\Oauth\Entities\AccessTokenEntity;
-use Preferans\Oauth\Interfaces\AccessTokenRepositoryInterface;
+use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 
 /**
@@ -16,7 +15,8 @@ use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationExcep
  */
 class AccessTokenRepository extends AbstractRepository implements AccessTokenRepositoryInterface
 {
-    protected $scopeModelClass;
+    use Traits\ScopeAwareTrait, Traits\AccessTokensAwareTrait;
+
     protected $accessTokenModelClass;
 
     /**
@@ -123,87 +123,5 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
         ]);
 
         return $revoked > 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws Exceptions\IllegalStateException
-     */
-    public function getScopeModelClass(): string
-    {
-        if (empty($this->scopeModelClass) || !class_exists($this->scopeModelClass)) {
-            throw new Exceptions\IllegalStateException('Scope model class is empty or class does not exist');
-        }
-
-        return $this->scopeModelClass;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $modelClass
-     * @return void
-     */
-    public function setScopeModelClass(string $modelClass)
-    {
-        $this->scopeModelClass = $modelClass;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws Exceptions\IllegalStateException
-     */
-    public function getAccessTokenModelClass(): string
-    {
-        if (empty($this->accessTokenModelClass) || !class_exists($this->accessTokenModelClass)) {
-            throw new Exceptions\IllegalStateException('AccessToken model class is empty or class does not exist');
-        }
-
-        return $this->accessTokenModelClass;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $modelClass
-     * @return mixed
-     */
-    public function setAccessTokenModelClass(string $modelClass)
-    {
-        $this->accessTokenModelClass = $modelClass;
-    }
-
-    /**
-     * Tries to get AccessToken for the database.
-     *
-     * @param $identity
-     * @return ModelInterface|null
-     */
-    public function findByIdentity($identity)
-    {
-        $accessToken = $this->createAccessTokenModel();
-
-        $accessToken = $accessToken::findFirst([
-            'conditions' => 'id = :identity:',
-            'bind'       => compact('identity'),
-        ]);
-
-        return $accessToken ?? null;
-    }
-
-    /**
-     * Creates a new AccessToken Model instance.
-     *
-     * @return ModelInterface
-     */
-    protected function createAccessTokenModel(): ModelInterface
-    {
-        $accessTokenModelClass = $this->getAccessTokenModelClass();
-
-        return new $accessTokenModelClass();
     }
 }

@@ -3,10 +3,9 @@
 namespace Preferans\Oauth\Repositories;
 
 use Preferans\Oauth\Entities\ClientEntity;
-use Preferans\Oauth\Exceptions;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
-use Preferans\Oauth\Interfaces\ClientRepositoryInterface;
+use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
 /**
  * Preferans\Oauth\Repositories\ClientRepository
@@ -15,10 +14,19 @@ use Preferans\Oauth\Interfaces\ClientRepositoryInterface;
  */
 class ClientRepository extends AbstractRepository implements ClientRepositoryInterface
 {
-    protected $grantModelClass;
-    protected $clientModelClass;
-    protected $clientGrantModelClass;
+    use Traits\GrantAwareTrait, Traits\ClientAwareTrait, Traits\ClientGrantsAwareTrait;
+
     protected $limitClientsToGrants = false;
+
+    /**
+     * ClientRepository constructor.
+     *
+     * @param bool $limitClientsToGrants
+     */
+    public function __construct($limitClientsToGrants = false)
+    {
+        $this->limitClientsToGrants = $limitClientsToGrants;
+    }
 
     /**
      * {@inheritdoc}
@@ -44,7 +52,7 @@ class ClientRepository extends AbstractRepository implements ClientRepositoryInt
 
         if ($this->limitClientsToGrants) {
             $builder
-                ->innerJoin($this->getClientGrantModelClass(), 'cg.client_id = c.id', 'cg')
+                ->innerJoin($this->getClientGrantsModelClass(), 'cg.client_id = c.id', 'cg')
                 ->innerJoin($this->getGrantModelClass(), 'g.id = cg.grant_id', 'g')
                 ->andWhere('g.id = :grantType:', compact('grantType'));
         }
@@ -63,84 +71,5 @@ class ClientRepository extends AbstractRepository implements ClientRepositoryInt
         $client->setIdentifier($result->id);
 
         return $client;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws Exceptions\IllegalStateException
-     */
-    public function getClientModelClass(): string
-    {
-        if (empty($this->clientModelClass) || !class_exists($this->clientModelClass)) {
-            throw new Exceptions\IllegalStateException('Client model class is empty or class does not exist');
-        }
-
-        return $this->clientModelClass;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $modelClass
-     * @return void
-     */
-    public function setClientModelClass(string $modelClass)
-    {
-        $this->clientModelClass = $modelClass;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     */
-    public function getGrantModelClass(): string
-    {
-        return $this->grantModelClass;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $modelClass
-     * @return void
-     */
-    public function setGrantModelClass(string $modelClass)
-    {
-        $this->grantModelClass = $modelClass;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     */
-    public function getClientGrantModelClass(): string
-    {
-        return $this->clientModelClass;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $modelClass
-     * @return void
-     */
-    public function setClientGrantModelClass(string $modelClass)
-    {
-        $this->clientModelClass = $modelClass;
-    }
-
-    /**
-     * Enables/Disables limit clients to grants.
-     *
-     * @param $flag
-     * @return void
-     */
-    public function limitClientsToGrants($flag)
-    {
-        $this->limitClientsToGrants = (bool)$flag;
     }
 }
