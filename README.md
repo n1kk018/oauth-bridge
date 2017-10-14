@@ -70,7 +70,7 @@ class ServiceProvider implements ServiceProviderInterface
                 $repository->setScopeModelClass(Scopes::class);
                 $repository->setGrantScopesModelClass(GrantScopes::class);
                 $repository->setGrantsModelClass(Grants::class);
-                $repository->setClientModelClass(Clients::class);
+                $repository->setClientsModelClass(Clients::class);
                 $repository->setClientScopesModelClass(ClientScopes::class);
                 $repository->setUserModelClass(Users::class);
                 $repository->setUserScopesModelClass(UserScopes::class);

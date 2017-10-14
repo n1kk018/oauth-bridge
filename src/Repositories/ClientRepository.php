@@ -14,7 +14,7 @@ use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
  */
 class ClientRepository extends AbstractRepository implements ClientRepositoryInterface
 {
-    use Traits\GrantsAwareTrait, Traits\ClientAwareTrait, Traits\ClientGrantsAwareTrait;
+    use Traits\GrantsAwareTrait, Traits\ClientsAwareTrait, Traits\ClientGrantsAwareTrait;
 
     protected $limitClientsToGrants = false;
 
@@ -43,7 +43,7 @@ class ClientRepository extends AbstractRepository implements ClientRepositoryInt
     {
         $builder = $this->createQueryBuilder()
             ->columns(['c.id', 'c.secret', 'c.name'])
-            ->addFrom($this->getClientModelClass(), 'c')
+            ->addFrom($this->getClientsModelClass(), 'c')
             ->where('c.id = :clientIdentifier:', compact('clientIdentifier'))
             ->limit(1);
 

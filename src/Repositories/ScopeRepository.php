@@ -15,7 +15,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
  */
 class ScopeRepository extends AbstractRepository implements ScopeRepositoryInterface
 {
-    use Traits\ScopeAwareTrait, Traits\GrantScopesAwareTrait, Traits\GrantsAwareTrait, Traits\ClientAwareTrait;
+    use Traits\ScopeAwareTrait, Traits\GrantScopesAwareTrait, Traits\GrantsAwareTrait, Traits\ClientsAwareTrait;
     use Traits\ClientScopesAwareTrait, Traits\UserAwareTrait, Traits\UserScopesAwareTrait;
 
     protected $limitScopesToGrants;
@@ -105,7 +105,7 @@ class ScopeRepository extends AbstractRepository implements ScopeRepositoryInter
         if ($this->limitClientsToScopes) {
             $builder
                 ->innerJoin($this->getClientScopesModelClass(), 'cs.scope_id = s.id', 'cs')
-                ->innerJoin($this->getClientModelClass(), 'c.id = cs.client_id', 'c')
+                ->innerJoin($this->getClientsModelClass(), 'c.id = cs.client_id', 'c')
                 ->andWhere('c.id = :client_id:', [
                     'client_id' => $clientEntity->getIdentifier(),
                 ]);
