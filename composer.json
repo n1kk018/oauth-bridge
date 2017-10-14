@@ -10,7 +10,6 @@
     "oauth2",
     "micro",
     "phalcon",
-    "phalcon",
     "preferans"
   ],
   "require": {

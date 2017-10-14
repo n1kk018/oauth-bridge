@@ -3,7 +3,6 @@
 namespace Preferans\Oauth\Interfaces;
 
 use League\OAuth2\Server\Repositories;
-use Phalcon\Mvc\Model\ManagerInterface;
 
 /**
  * Preferans\Oauth\Interfaces\AccessTokenRepositoryInterface

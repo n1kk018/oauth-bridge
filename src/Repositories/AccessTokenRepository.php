@@ -28,11 +28,8 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
      *
      * @return Entities\AccessTokenEntityInterface
      */
-    public function getNewToken(
-        Entities\ClientEntityInterface $clientEntity,
-        array $scopes,
-        $userIdentifier = null
-    ): Entities\AccessTokenEntityInterface {
+    public function getNewToken(Entities\ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
+    {
         $accessToken = new AccessTokenEntity();
         $accessToken->setClient($clientEntity);
 
