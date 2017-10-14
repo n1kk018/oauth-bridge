@@ -31,15 +31,16 @@ class ScopeRepository extends AbstractRepository implements ScopeRepositoryInter
      */
     public function __construct($limitScopesToGrants = true, $limitClientsToScopes = true, $limitUsersToScopes = true)
     {
-        $this->limitScopesToGrants = (bool) $limitScopesToGrants;
-        $this->limitClientsToScopes = (bool) $limitClientsToScopes;
-        $this->limitUsersToScopes = (bool) $limitUsersToScopes;
+        $this->limitScopesToGrants = (bool)$limitScopesToGrants;
+        $this->limitClientsToScopes = (bool)$limitClientsToScopes;
+        $this->limitUsersToScopes = (bool)$limitUsersToScopes;
     }
 
     /**
      * {@inheritdoc}
      *
      * @param string $identifier The scope identifier
+     *
      * @return ScopeEntityInterface
      * @throws OAuthServerException
      */
@@ -79,11 +80,13 @@ class ScopeRepository extends AbstractRepository implements ScopeRepositoryInter
      * @param string                 $grantType
      * @param ClientEntityInterface  $clientEntity
      * @param null|string            $userIdentifier
+     *
      * @return ScopeEntityInterface[]
      * @throws OAuthServerException
      */
     public function finalizeScopes(
-        array $scopes, $grantType,
+        array $scopes,
+        $grantType,
         ClientEntityInterface $clientEntity,
         $userIdentifier = null
     ) {

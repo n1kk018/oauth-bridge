@@ -32,6 +32,7 @@ trait UserScopesAwareTrait
      * {@inheritdoc}
      *
      * @param string $modelClass
+     *
      * @return void
      */
     public function setUserScopesModelClass(string $modelClass)

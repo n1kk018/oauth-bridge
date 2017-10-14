@@ -32,6 +32,7 @@ trait GrantAwareTrait
      * {@inheritdoc}
      *
      * @param string $modelClass
+     *
      * @return void
      */
     public function setGrantModelClass(string $modelClass)

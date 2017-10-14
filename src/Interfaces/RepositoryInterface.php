@@ -16,6 +16,7 @@ interface RepositoryInterface
      * Sets Models Manager.
      *
      * @param ManagerInterface $modelsManager
+     *
      * @return void
      */
     public function setModelManager(ManagerInterface $modelsManager);

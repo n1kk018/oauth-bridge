@@ -33,6 +33,7 @@ trait AccessTokensAwareTrait
      * Sets AccessTokens model class.
      *
      * @param string $modelClass
+     *
      * @return void
      */
     public function setAccessTokensModelClass(string $modelClass)
@@ -44,6 +45,7 @@ trait AccessTokensAwareTrait
      * Tries to get AccessToken for the database.
      *
      * @param $identity
+     *
      * @return ModelInterface|null
      */
     protected function findByIdentity($identity)

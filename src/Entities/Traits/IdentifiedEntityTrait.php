@@ -25,6 +25,7 @@ trait IdentifiedEntityTrait
      * Sets the entity's identifier.
      *
      * @param mixed $identifier
+     *
      * @return void
      */
     public function setIdentifier($identifier)

@@ -32,6 +32,7 @@ trait ClientAwareTrait
      * {@inheritdoc}
      *
      * @param string $modelClass
+     *
      * @return void
      */
     public function setClientModelClass(string $modelClass)

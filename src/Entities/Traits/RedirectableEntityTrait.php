@@ -15,6 +15,7 @@ trait RedirectableEntityTrait
      * Sets the entity's redirect uri.
      *
      * @param string $redirectUri
+     *
      * @return void
      */
     public function setRedirectUri($redirectUri)

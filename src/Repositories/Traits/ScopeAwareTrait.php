@@ -32,6 +32,7 @@ trait ScopeAwareTrait
      * {@inheritdoc}
      *
      * @param string $modelClass
+     *
      * @return void
      */
     public function setScopeModelClass(string $modelClass)

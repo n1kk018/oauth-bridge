@@ -32,6 +32,7 @@ trait UserAwareTrait
      * {@inheritdoc}
      *
      * @param string $modelClass
+     *
      * @return void
      */
     public function setUserModelClass(string $modelClass)

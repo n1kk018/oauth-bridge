@@ -32,6 +32,7 @@ trait GrantScopesAwareTrait
      * {@inheritdoc}
      *
      * @param string $modelClass
+     *
      * @return void
      */
     public function setGrantScopesModelClass(string $modelClass)

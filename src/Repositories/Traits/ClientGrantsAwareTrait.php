@@ -32,6 +32,7 @@ trait ClientGrantsAwareTrait
      * {@inheritdoc}
      *
      * @param string $modelClass
+     *
      * @return void
      */
     public function setClientGrantsModelClass(string $modelClass)

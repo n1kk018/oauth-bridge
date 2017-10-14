@@ -22,7 +22,7 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
      *
      * @param Entities\ClientEntityInterface  $clientEntity
      * @param Entities\ScopeEntityInterface[] $scopes
-     * @param mixed                  $userIdentifier
+     * @param mixed                           $userIdentifier
      *
      * @return Entities\AccessTokenEntityInterface
      */
@@ -87,6 +87,7 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
      * {@inheritdoc}
      *
      * @param string $tokenId
+     *
      * @return void
      * @throws Exceptions\EntityException
      */
@@ -106,6 +107,7 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
      * {@inheritdoc}
      *
      * @param string $tokenId
+     *
      * @return bool
      */
     public function isAccessTokenRevoked($tokenId)

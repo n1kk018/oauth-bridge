@@ -18,13 +18,14 @@ trait NamedEntityTrait
      */
     public function getName(): string
     {
-        return (string) $this->name;
+        return (string)$this->name;
     }
 
     /**
      * Sets the entity's name.
      *
      * @param string $name
+     *
      * @return void
      */
     public function setName(string $name)

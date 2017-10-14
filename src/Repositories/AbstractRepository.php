@@ -15,6 +15,7 @@ abstract class AbstractRepository implements RepositoryInterface
 {
     /**
      * The internal Models Manager.
+     *
      * @var ManagerInterface
      */
     protected $modelsManager;
@@ -23,6 +24,7 @@ abstract class AbstractRepository implements RepositoryInterface
      * Sets Models Manager.
      *
      * @param ManagerInterface $modelsManager
+     *
      * @return void
      */
     public function setModelManager(ManagerInterface $modelsManager)
