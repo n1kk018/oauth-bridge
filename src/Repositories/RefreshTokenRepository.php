@@ -3,11 +3,16 @@
 namespace Preferans\Oauth\Repositories;
 
 use Preferans\Oauth\Exceptions;
-use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
-use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
-use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use Preferans\Oauth\Entities\RefreshTokenEntity;
+use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 
+/**
+ * Preferans\Oauth\Repositories\RefreshTokenRepository
+ *
+ * @package Preferans\Oauth\Repositories
+ */
 class RefreshTokenRepository extends AbstractRepository implements RefreshTokenRepositoryInterface
 {
     use Traits\RefreshTokensAwareTrait;
