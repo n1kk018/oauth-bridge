@@ -6,7 +6,6 @@ use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\ManagerInterface;
 use Phalcon\Mvc\Model\Query\BuilderInterface;
-use Preferans\Oauth\Interfaces\RepositoryInterface;
 
 /**
  * Preferans\Oauth\Repositories\AbstractRepository

@@ -1,12 +1,13 @@
 <?php
 
-namespace Preferans\Oauth\Interfaces;
+namespace Preferans\Oauth\Repositories;
+
 
 use Phalcon\Mvc\Model\ManagerInterface;
 use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 /**
- * Preferans\Oauth\Interfaces\RepositoryInterface
+ * Preferans\Oauth\Repositories\RepositoryInterface
  *
  * @package Preferans\Oauth\Repositories
  */
