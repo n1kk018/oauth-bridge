@@ -47,16 +47,16 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     public function getUserEntityByUserCredentials($username, $password, $grantType, ClientEntityInterface $client)
     {
         $builder = $this->createQueryBuilder()
-            ->columns(['u.id', 'u.username', 'u.password'])
+            ->columns(['u.id', 'u.name', 'u.password'])
             ->addFrom($this->getUserModelClass(), 'u')
-            ->where('u.username = :username:', compact('username'))
+            ->where('u.name = :username:', compact('username'))
             ->limit(1);
 
         if ($this->limitUsersToGrants) {
             $builder
-                ->innerJoin($this->getUserGrantsModelClass(), 'UserGrant.user_id = User.id', 'UserGrant')
-                ->innerJoin($this->getGrantsModelClass(), 'Grant.id = UserGrant.grant_id', 'Grant')
-                ->andWhere('Grant.id = :grantType:', compact('grantType'));
+                ->innerJoin($this->getUserGrantsModelClass(), 'ug.user_id = u.id', 'ug')
+                ->innerJoin($this->getGrantsModelClass(), 'g.id = ug.grant_id', 'g')
+                ->andWhere('g.id = :grantType:', compact('grantType'));
         }
 
         $query = $builder->getQuery();
