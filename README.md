@@ -1,6 +1,6 @@
 # oAuth Bridge
 
-A library focused on API Authentication.
+A library focused on API Authentication for Phalcon applications.
 
 ## License
 
