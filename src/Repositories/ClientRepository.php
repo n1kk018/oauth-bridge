@@ -32,8 +32,7 @@ class ClientRepository extends AbstractRepository implements ClientRepositoryInt
      */
     public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
     {
-        $builder = $this->modelsManager
-            ->createBuilder()
+        $builder = $this->createQueryBuilder()
             ->columns(['c.id', 'c.secret', 'c.name'])
             ->addFrom($this->getClientModelClass(), 'c')
             ->where('c.id = :clientIdentifier:', compact('clientIdentifier'))

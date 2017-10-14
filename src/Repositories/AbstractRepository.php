@@ -3,6 +3,7 @@
 namespace Preferans\Oauth\Repositories;
 
 use Phalcon\Mvc\Model\ManagerInterface;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 use Preferans\Oauth\Interfaces\RepositoryInterface;
 
 /**
@@ -37,5 +38,15 @@ abstract class AbstractRepository implements RepositoryInterface
     public function getModelManager(): ManagerInterface
     {
         return $this->modelsManager;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return BuilderInterface
+     */
+    public function createQueryBuilder(): BuilderInterface
+    {
+        return $this->getModelManager()->createBuilder();
     }
 }

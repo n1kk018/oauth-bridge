@@ -3,6 +3,7 @@
 namespace Preferans\Oauth\Interfaces;
 
 use Phalcon\Mvc\Model\ManagerInterface;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 /**
  * Preferans\Oauth\Interfaces\RepositoryInterface
@@ -25,4 +26,11 @@ interface RepositoryInterface
      * @return ManagerInterface
      */
     public function getModelManager(): ManagerInterface;
+
+    /**
+     * Creates a Query Builder.
+     *
+     * @return BuilderInterface
+     */
+    public function createQueryBuilder(): BuilderInterface;
 }

@@ -54,16 +54,14 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
         $scopes = [];
 
         foreach ($accessTokenEntity->getScopes() as $scope) {
-            $builder = $this->modelsManager
-                ->createBuilder()
+            $result = $this->createQueryBuilder()
                 ->addFrom($this->getScopeModelClass())
                 ->where('id = :id:', [
                     'id' => $scope->getIdentifier(),
                 ])
-                ->limit(1);
-
-            $query = $builder->getQuery();
-            $result = $query->execute();
+                ->limit(1)
+                ->getQuery()
+                ->execute();
 
             if ($result->count() > 0) {
                 $scopes[] = $result->getFirst();
