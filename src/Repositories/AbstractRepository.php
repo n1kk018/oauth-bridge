@@ -2,6 +2,8 @@
 
 namespace Preferans\Oauth\Repositories;
 
+use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\ManagerInterface;
 use Phalcon\Mvc\Model\Query\BuilderInterface;
 use Preferans\Oauth\Interfaces\RepositoryInterface;
@@ -11,7 +13,7 @@ use Preferans\Oauth\Interfaces\RepositoryInterface;
  *
  * @package Preferans\Oauth\Repositories
  */
-abstract class AbstractRepository implements RepositoryInterface
+abstract class AbstractRepository extends Injectable implements RepositoryInterface
 {
     /**
      * The internal Models Manager.
@@ -39,6 +41,11 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function getModelManager(): ManagerInterface
     {
+        if (!$this->modelsManager instanceof ManagerInterface) {
+            $this->modelsManager = new Manager();
+            $this->modelsManager->setDI($this->getDI());
+        }
+
         return $this->modelsManager;
     }
 

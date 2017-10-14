@@ -4,9 +4,10 @@ A library focused on API Authentication for Phalcon applications.
 
 ## Usage
 
-### Access Token Repository
+### Setup
 
-#### Setup
+#### Access Token Repository
+
 
 ```php
 namespace Preferans\Provider\AuthServerProvider;
@@ -35,6 +36,51 @@ class ServiceProvider implements ServiceProviderInterface
     }
 }
 ````
+
+#### Scope Repository
+
+```php
+namespace Preferans\Provider\ScopeRepositoryProvider;
+
+use Phalcon\DiInterface;
+use Acme\Models\Users;
+use Acme\Models\Grants;
+use Acme\Models\Scopes;
+use Acme\Models\Clients;
+use Acme\Models\UserScopes;
+use Acme\Models\GrantScopes;
+use Acme\Models\ClientScopes;
+use Phalcon\Di\ServiceProviderInterface;
+use Preferans\Oauth\Repositories\ScopeRepository;
+use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+
+class ServiceProvider implements ServiceProviderInterface
+{
+    public function register(DiInterface $container)
+    {
+        $container->setShared(
+            ScopeRepositoryInterface::class,
+            function () {
+                $repository = new ScopeRepository(
+                    true, // Limit scopes to grants
+                    true, // Limit clients to scopes
+                    true  // Limit users to scopes
+                );
+
+                $repository->setScopeModelClass(Scopes::class);
+                $repository->setGrantScopesModelClass(GrantScopes::class);
+                $repository->setGrantModelClass(Grants::class);
+                $repository->setClientModelClass(Clients::class);
+                $repository->setClientScopesModelClass(ClientScopes::class);
+                $repository->setUserModelClass(Users::class);
+                $repository->setUserScopesModelClass(UserScopes::class);
+
+                return $repository;
+            }
+        );
+    }
+}
+```
 
 ## License
 
