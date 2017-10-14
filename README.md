@@ -8,7 +8,6 @@ A library focused on API Authentication for Phalcon applications.
 
 #### Access Token Repository
 
-
 ```php
 namespace Acme\Provider\AuthServerProvider;
 
@@ -35,7 +34,7 @@ class ServiceProvider implements ServiceProviderInterface
         );
     }
 }
-````
+```
 
 #### Scope Repository
 
@@ -110,6 +109,41 @@ class ServiceProvider implements ServiceProviderInterface
                 $repository->setUserModelClass(Users::class);
                 $repository->setGrantsModelClass(Grants::class);
                 $repository->setUserGrantsModelClass(UserGrants::class);
+
+                return $repository;
+            }
+        );
+    }
+}
+```
+
+#### Client Repository
+
+```php
+namespace Acme\Provider\ClientRepositoryProvider;
+
+use Phalcon\DiInterface;
+use Acme\Models\Grants;
+use Acme\Models\Clients;
+use Acme\Models\ClientGrants;
+use Phalcon\Di\ServiceProviderInterface;
+use Preferans\Oauth\Repositories\ClientRepository;
+use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
+
+class ServiceProvider implements ServiceProviderInterface
+{
+    public function register(DiInterface $container)
+    {
+        $container->setShared(
+            ClientRepositoryInterface::class,
+            function () {
+                $repository = new ClientRepository(
+                    true // Limit clients to grants
+                );
+
+                $repository->setGrantsModelClass(Grants::class);
+                $repository->setClientsModelClass(Clients::class);
+                $repository->setClientGrantsModelClass(ClientGrants::class);
 
                 return $repository;
             }
