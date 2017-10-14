@@ -17,8 +17,6 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
 {
     use Traits\ScopeAwareTrait, Traits\AccessTokensAwareTrait;
 
-    protected $accessTokenModelClass;
-
     /**
      * {@inheritdoc}
      *
