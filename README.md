@@ -10,7 +10,7 @@ A library focused on API Authentication for Phalcon applications.
 
 
 ```php
-namespace Preferans\Provider\AuthServerProvider;
+namespace Acme\Provider\AuthServerProvider;
 
 use Phalcon\DiInterface;
 use Acme\Models\Scopes;
@@ -40,7 +40,7 @@ class ServiceProvider implements ServiceProviderInterface
 #### Scope Repository
 
 ```php
-namespace Preferans\Provider\ScopeRepositoryProvider;
+namespace Acme\Provider\ScopeRepositoryProvider;
 
 use Phalcon\DiInterface;
 use Acme\Models\Users;
@@ -74,6 +74,42 @@ class ServiceProvider implements ServiceProviderInterface
                 $repository->setClientScopesModelClass(ClientScopes::class);
                 $repository->setUserModelClass(Users::class);
                 $repository->setUserScopesModelClass(UserScopes::class);
+
+                return $repository;
+            }
+        );
+    }
+}
+```
+
+#### User Repository
+
+```php
+namespace Acme\Provider\UserRepositoryProvider;
+
+use Phalcon\DiInterface;
+use Acme\Models\Users;
+use Acme\Models\Grants;
+use Acme\Models\UserGrants;
+use Phalcon\Di\ServiceProviderInterface;
+use Preferans\Oauth\Repositories\UserRepository;
+use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+
+class ServiceProvider implements ServiceProviderInterface
+{
+    public function register(DiInterface $container)
+    {
+        $container->setShared(
+            UserRepositoryInterface::class,
+            function () {
+                $repository = new UserRepository(
+                    true, // Limit users to clients
+                    true  // Limit users to grants
+                );
+
+                $repository->setUserModelClass(Users::class);
+                $repository->setGrantsModelClass(Grants::class);
+                $repository->setUserGrantsModelClass(UserGrants::class);
 
                 return $repository;
             }
