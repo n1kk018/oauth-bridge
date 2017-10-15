@@ -68,7 +68,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
     protected $userRepository;
 
     /**
-     * @var \DateInterval
+     * @var DateInterval
      */
     protected $refreshTokenTTL;
 
@@ -390,7 +390,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      * @return AccessTokenEntityInterface
      */
     protected function issueAccessToken(
-        \DateInterval $accessTokenTTL,
+        DateInterval $accessTokenTTL,
         ClientEntityInterface $client,
         $userIdentifier,
         array $scopes = []
@@ -423,7 +423,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
     /**
      * Issue an auth code.
      *
-     * @param \DateInterval          $authCodeTTL
+     * @param DateInterval           $authCodeTTL
      * @param ClientEntityInterface  $client
      * @param string                 $userIdentifier
      * @param string                 $redirectUri
@@ -435,7 +435,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      * @return AuthCodeEntityInterface
      */
     protected function issueAuthCode(
-        \DateInterval $authCodeTTL,
+        DateInterval $authCodeTTL,
         ClientEntityInterface $client,
         $userIdentifier,
         $redirectUri,
