@@ -4,9 +4,12 @@ namespace Preferans\Oauth\Tests\Server;
 
 use PHPUnit\Framework\TestCase;
 use Preferans\Oauth\Server\CryptKey;
+use Preferans\Oauth\Tests\Helpers\KeysAwareTrait;
 
 class CryptKeyTest extends TestCase
 {
+    use KeysAwareTrait;
+
     /**
      * @test
      * @expectedException \LogicException
@@ -20,11 +23,9 @@ class CryptKeyTest extends TestCase
     /** @test */
     public function shouldCreateKeyInstance()
     {
-        $keyFile = __DIR__ . '/../_data/public.key';
-        chmod($keyFile, 0600);
-        $key = new CryptKey($keyFile, 'secret');
+        $key = new CryptKey($this->publicKey, 'secret');
 
-        $this->assertEquals('file://' . $keyFile, $key->getKeyPath());
+        $this->assertEquals('file://' . $this->publicKey, $key->getKeyPath());
         $this->assertEquals('secret', $key->getPassPhrase());
     }
 }

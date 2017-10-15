@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit
-    bootstrap="tests/Bootstrap.php"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+    bootstrap="./vendor/autoload.php"
     colors="true"
     convertErrorsToExceptions="true"
     convertNoticesToExceptions="true"
@@ -13,16 +15,21 @@
     stopOnSkipped="false"
     processIsolation="false"
     backupGlobals="false"
-    syntaxCheck="true"
-    columns="max">
+    columns="max"
+    beStrictAboutTestsThatDoNotTestAnything="true"
+    beStrictAboutResourceUsageDuringSmallTests="true"
+    beStrictAboutChangesToGlobalState="true"
+>
 
-    <testsuites name="General Test Suite">
-        <directory suffix=".php">./tests/</directory>
+    <testsuites>
+        <testsuite name="General Test Suite">
+            <directory suffix=".php">tests</directory>
+        </testsuite>
     </testsuites>
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
+            <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
 
@@ -33,15 +40,7 @@
     </php>
 
     <logging>
-        <log
-            type="coverage-text"
-            target="php://stdout"
-            title="preferans/oauth-bridge"
-            charset="UTF-8" yui="true"
-            highlight="true"
-            lowUpperBound="60"
-            highLowerBound="90"/>
-
+        <log type="coverage-text" target="php://stdout" lowUpperBound="60" highLowerBound="90"/>
         <log type="coverage-clover" target="build/coverage/clover.xml"/>
     </logging>
 </phpunit>
