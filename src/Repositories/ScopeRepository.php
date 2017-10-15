@@ -25,9 +25,9 @@ class ScopeRepository extends AbstractRepository implements ScopeRepositoryInter
     /**
      * ScopeRepository constructor.
      *
-     * @param bool $limitScopesToGrants
-     * @param bool $limitClientsToScopes
-     * @param bool $limitUsersToScopes
+     * @param bool|mixed $limitScopesToGrants
+     * @param bool|mixed $limitClientsToScopes
+     * @param bool|mixed $limitUsersToScopes
      */
     public function __construct($limitScopesToGrants = true, $limitClientsToScopes = true, $limitUsersToScopes = true)
     {

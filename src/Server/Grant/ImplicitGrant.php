@@ -224,7 +224,7 @@ class ImplicitGrant extends AbstractAuthorizeGrant
                 $this->makeRedirectUri(
                     $finalRedirectUri,
                     [
-                        'access_token' => (string)$accessToken->convertToJWT($this->privateKey),
+                        'access_token' => $accessToken->convertToJWT($this->privateKey),
                         'token_type'   => 'bearer',
                         'expires_in'   => $expiresIn,
                         'state'        => $authorizationRequest->getState(),

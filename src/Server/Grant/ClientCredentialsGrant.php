@@ -15,6 +15,12 @@ class ClientCredentialsGrant extends AbstractGrant
 {
     /**
      * {@inheritdoc}
+     *
+     * @param RequestInterface      $request
+     * @param ResponseTypeInterface $responseType
+     * @param DateInterval          $accessTokenTTL
+     *
+     * @return ResponseTypeInterface
      */
     public function respondToAccessTokenRequest(
         RequestInterface $request,

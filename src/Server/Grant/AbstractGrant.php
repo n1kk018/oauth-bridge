@@ -2,7 +2,9 @@
 
 namespace Preferans\Oauth\Server\Grant;
 
+use DateTime;
 use DateInterval;
+use LogicException;
 use Phalcon\Di\Injectable;
 use League\OAuth2\Server\CryptKey;
 use Phalcon\Http\RequestInterface;
@@ -27,6 +29,7 @@ use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationExcep
 /**
  * Preferans\Oauth\Server\Grant\AbstractGrant
  *
+ * @property \Phalcon\Http\Response\Cookies|\Phalcon\Http\Response\CookiesInterface $cookies
  * @package Preferans\Oauth\Server\Grant
  */
 abstract class AbstractGrant extends Injectable implements GrantTypeInterface
@@ -212,10 +215,11 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      * {@inheritdoc}
      *
      * @param RequestInterface $request
+     * @throws LogicException
      */
     public function validateAuthorizationRequest(RequestInterface $request)
     {
-        throw new \LogicException('This grant cannot validate an authorization request');
+        throw new LogicException('This grant cannot validate an authorization request');
     }
 
     /**
@@ -225,7 +229,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      */
     public function completeAuthorizationRequest(AuthorizationRequest $authorizationRequest)
     {
-        throw new \LogicException('This grant cannot complete an authorization request');
+        throw new LogicException('This grant cannot complete an authorization request');
     }
 
     /**
@@ -383,7 +387,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      *
      * @param DateInterval           $accessTokenTTL
      * @param ClientEntityInterface  $client
-     * @param string                 $userIdentifier
+     * @param string|null            $userIdentifier
      * @param ScopeEntityInterface[] $scopes
      *
      * @throws OAuthServerException
@@ -401,12 +405,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
 
         $accessToken = $this->accessTokenRepository->getNewToken($client, $scopes, $userIdentifier);
         $accessToken->setClient($client);
-        $accessToken->setUserIdentifier($userIdentifier);
-        $accessToken->setExpiryDateTime((new \DateTime())->add($accessTokenTTL));
-
-        foreach ($scopes as $scope) {
-            $accessToken->addScope($scope);
-        }
+        $accessToken->setExpiryDateTime((new DateTime())->add($accessTokenTTL));
 
         while ($maxGenerationAttempts-- > 0) {
             $accessToken->setIdentifier($this->generateUniqueIdentifier());
@@ -446,7 +445,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
         $maxGenerationAttempts = self::MAX_RANDOM_TOKEN_GENERATION_ATTEMPTS;
 
         $authCode = $this->authCodeRepository->getNewAuthCode();
-        $authCode->setExpiryDateTime((new \DateTime())->add($authCodeTTL));
+        $authCode->setExpiryDateTime((new DateTime())->add($authCodeTTL));
         $authCode->setClient($client);
         $authCode->setUserIdentifier($userIdentifier);
         $authCode->setRedirectUri($redirectUri);
@@ -482,7 +481,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
         $maxGenerationAttempts = self::MAX_RANDOM_TOKEN_GENERATION_ATTEMPTS;
 
         $refreshToken = $this->refreshTokenRepository->getNewRefreshToken();
-        $refreshToken->setExpiryDateTime((new \DateTime())->add($this->refreshTokenTTL));
+        $refreshToken->setExpiryDateTime((new DateTime())->add($this->refreshTokenTTL));
         $refreshToken->setAccessToken($accessToken);
 
         while ($maxGenerationAttempts-- > 0) {

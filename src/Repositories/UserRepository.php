@@ -24,8 +24,8 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
     /**
      * ScopeRepository constructor.
      *
-     * @param bool $limitUsersToClients
-     * @param bool $limitUsersToGrants
+     * @param bool|mixed $limitUsersToClients
+     * @param bool|mixed $limitUsersToGrants
      */
     public function __construct($limitUsersToClients = true, $limitUsersToGrants = true)
     {

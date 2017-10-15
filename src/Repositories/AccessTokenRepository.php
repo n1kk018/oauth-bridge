@@ -35,7 +35,9 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
             $accessToken->addScope($scope);
         }
 
-        $accessToken->setUserIdentifier($userIdentifier);
+        if ($userIdentifier !== null) {
+            $accessToken->setUserIdentifier($userIdentifier);
+        }
 
         return $accessToken;
     }
