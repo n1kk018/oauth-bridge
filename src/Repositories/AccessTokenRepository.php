@@ -49,6 +49,10 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
      */
     public function persistNewAccessToken(Entities\AccessTokenEntityInterface $accessTokenEntity)
     {
+        if ($this->findByIdentity($accessTokenEntity->getIdentifier())) {
+            throw UniqueTokenIdentifierConstraintViolationException::create();
+        }
+
         $scopes = [];
 
         foreach ($accessTokenEntity->getScopes() as $scope) {
@@ -64,10 +68,6 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
             if ($result->count() > 0) {
                 $scopes[] = $result->getFirst();
             }
-        }
-
-        if ($this->findByIdentity($accessTokenEntity->getIdentifier())) {
-            throw UniqueTokenIdentifierConstraintViolationException::create();
         }
 
         $accessToken = $this->createAccessTokensModel();
