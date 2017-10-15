@@ -1,0 +1,42 @@
+language: php
+
+dist: trusty
+sudo: false
+
+php:
+  - 7.0
+  - 7.1
+
+git:
+  depth: 1
+
+cache:
+  apt: true
+  ccache: true
+  timeout: 691200
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+    - $HOME/.local/lib
+
+env:
+  global:
+    - PATH="$PATH:~/bin"
+
+before_install:
+  - if [ ! -z "${GH_TOKEN}" ]; then composer config github-oauth.github.com ${GH_TOKEN}; echo "Configured Github token"; fi;
+
+install:
+  - bash bash tests/_ci/install-phalcon.sh
+  - composer install --prefer-dist --no-interaction --quiet --no-ansi --no-progress --optimize-autoloader --dev --no-suggest
+  - $(phpenv which php) --ri phalcon
+
+script:
+  - vendor/bin/phpcs
+
+notifications:
+  email:
+    recipients:
+      - serghei@phalconphp.com
+    on_success: change
+    on_failure: always
