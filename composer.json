@@ -51,9 +51,6 @@
         "issues": "https://github.com/preferans/oauth-bridge/issues",
         "docs": "https://preferans.gitbooks.io/oauth-bridge/content"
     },
-    "conflict": {
-        "league/oauth2-server": "*"
-    },
     "autoload": {
         "psr-4": {
             "Preferans\\Oauth\\": "src/"
