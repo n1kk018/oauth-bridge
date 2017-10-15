@@ -3,8 +3,8 @@
 namespace Preferans\Oauth\Repositories;
 
 use Preferans\Oauth\Entities\ScopeEntity;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
+use Preferans\Oauth\Entities\ScopeEntityInterface;
+use Preferans\Oauth\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 

@@ -4,8 +4,8 @@ namespace Preferans\Oauth\Repositories;
 
 use Phalcon\Security;
 use Preferans\Oauth\Entities\UserEntity;
-use League\OAuth2\Server\Entities\UserEntityInterface;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
+use Preferans\Oauth\Entities\UserEntityInterface;
+use Preferans\Oauth\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 

@@ -4,8 +4,8 @@ namespace Preferans\Oauth\Server\ResponseType;
 
 use DateTime;
 use Phalcon\Http\ResponseInterface;
-use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
-use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use Preferans\Oauth\Entities\AccessTokenEntityInterface;
+use Preferans\Oauth\Entities\RefreshTokenEntityInterface;
 
 /**
  * Preferans\Oauth\Server\ResponseType\BearerTokenResponse

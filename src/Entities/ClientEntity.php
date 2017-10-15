@@ -3,7 +3,6 @@
 namespace Preferans\Oauth\Entities;
 
 use Preferans\Oauth\Entities\Traits\NamedEntityTrait;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
 use Preferans\Oauth\Entities\Traits\IdentifiedEntityTrait;
 use Preferans\Oauth\Entities\Traits\RedirectableEntityTrait;
 

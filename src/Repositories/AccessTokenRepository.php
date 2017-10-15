@@ -2,9 +2,8 @@
 
 namespace Preferans\Oauth\Repositories;
 
+use Preferans\Oauth\Entities;
 use Preferans\Oauth\Exceptions;
-use League\OAuth2\Server\Entities;
-use Preferans\Oauth\Entities\AccessTokenEntity;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 
@@ -28,7 +27,7 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
      */
     public function getNewToken(Entities\ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
-        $accessToken = new AccessTokenEntity();
+        $accessToken = new Entities\AccessTokenEntity();
         $accessToken->setClient($clientEntity);
 
         foreach ($scopes as $scope) {

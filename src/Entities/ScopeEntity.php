@@ -2,7 +2,6 @@
 
 namespace Preferans\Oauth\Entities;
 
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use Preferans\Oauth\Entities\Traits\IdentifiedEntityTrait;
 
 /**

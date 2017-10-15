@@ -7,7 +7,7 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 use Phalcon\Http\RequestInterface;
 use Preferans\Oauth\Server\RequestEvent;
 use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
+use Preferans\Oauth\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
 /**

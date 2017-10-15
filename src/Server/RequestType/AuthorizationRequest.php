@@ -2,9 +2,9 @@
 
 namespace Preferans\Oauth\Server\RequestType;
 
-use League\OAuth2\Server\Entities\UserEntityInterface;
-use League\OAuth2\Server\Entities\ScopeEntityInterface;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
+use Preferans\Oauth\Entities\UserEntityInterface;
+use Preferans\Oauth\Entities\ScopeEntityInterface;
+use Preferans\Oauth\Entities\ClientEntityInterface;
 
 /**
  * Preferans\Oauth\Server\RequestType\AuthorizationRequest

@@ -2,10 +2,9 @@
 
 namespace Preferans\Oauth\Entities;
 
+use Preferans\Oauth\Entities\Traits\TokenEntityTrait;
 use Preferans\Oauth\Entities\Traits\IdentifiedEntityTrait;
-use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
-use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
-use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
+use Preferans\Oauth\Entities\Traits\AccessTokenTrait;
 
 /**
  * Preferans\Oauth\Entities\AccessTokenEntity

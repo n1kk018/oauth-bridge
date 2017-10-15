@@ -4,7 +4,7 @@ namespace Preferans\Oauth\Repositories;
 
 use Preferans\Oauth\Exceptions;
 use Preferans\Oauth\Entities\RefreshTokenEntity;
-use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
+use Preferans\Oauth\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 
