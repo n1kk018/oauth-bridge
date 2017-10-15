@@ -84,7 +84,9 @@ class CryptKey
 
         if (chmod($keyPath, 0600) === false) {
             // @codeCoverageIgnoreStart
-            throw new \RuntimeException(sprintf('The key file "%s" file mode could not be changed with chmod to 600', $keyPath));
+            throw new \RuntimeException(
+                sprintf('The key file "%s" file mode could not be changed with chmod to 600', $keyPath)
+            );
             // @codeCoverageIgnoreEnd
         }
 

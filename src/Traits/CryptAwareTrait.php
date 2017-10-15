@@ -12,7 +12,7 @@ use Phalcon\Crypt;
 trait CryptAwareTrait
 {
     /**
-     * @var string
+     * @var string|null
      */
     protected $encryptionKey;
 
@@ -45,5 +45,15 @@ trait CryptAwareTrait
         }
 
         return $this->crypt;
+    }
+
+    /**
+     * Set the encryption key
+     *
+     * @param string|null $key
+     */
+    public function setEncryptionKey($key = null)
+    {
+        $this->encryptionKey = $key;
     }
 }
