@@ -35,6 +35,7 @@ script:
   - composer phpcs
   - composer phpstan
   - composer phpunit
+  - composer humbug
 
 notifications:
   email:

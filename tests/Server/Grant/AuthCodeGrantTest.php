@@ -19,6 +19,8 @@ class AuthCodeGrantTest extends TestCase
     /** @test */
     public function shouldValidateAuthorizationRequestCodeChallenge()
     {
+        $verifier = new PlainVerifier();
+
         $client = new ClientEntity();
         $client->setRedirectUri('http://foo/bar');
 
@@ -26,7 +28,7 @@ class AuthCodeGrantTest extends TestCase
         $clientRepositoryMock->method('getClientEntity')->willReturn($client);
 
         $requestMock = $this->getMockBuilder(RequestInterface::class)
-            ->setMethods(['hasQuery', 'getQuery'])
+            ->setMethods(['getQuery'])
             ->getMockForAbstractClass();
 
         $requestMock->method('getQuery')
@@ -34,7 +36,6 @@ class AuthCodeGrantTest extends TestCase
                 ['client_id', null, null],
                 ['redirect_uri', null, null],
                 ['scope', null, null],
-                //['response_type'], 'code',
                 ['state', null, null],
                 ['code_challenge'],
                 ['code_challenge_method']
@@ -45,7 +46,7 @@ class AuthCodeGrantTest extends TestCase
                 null,
                 null,
                 str_repeat('A', 48),
-                'plain'
+                $verifier->getMethod()
             );
 
         $grant = new AuthCodeGrant(
@@ -60,7 +61,48 @@ class AuthCodeGrantTest extends TestCase
         $authorizationRequest = $grant->validateAuthorizationRequest($requestMock);
 
         $this->assertInstanceOf(AuthorizationRequest::class, $authorizationRequest);
-        $this->assertEquals('plain', $authorizationRequest->getCodeChallengeMethod());
+        $this->assertEquals($verifier->getMethod(), $authorizationRequest->getCodeChallengeMethod());
         $this->assertEquals(str_repeat('A', 48), $authorizationRequest->getCodeChallenge());
+    }
+
+    /**
+     * @test
+     * @expectedException \Preferans\Oauth\Exceptions\OAuthServerException
+     * @expectedExceptionCode 3
+     */
+    public function shouldThrowExceptionOnValidateAuthorizationRequestMissingCodeChallenge()
+    {
+        $client = new ClientEntity();
+        $client->setRedirectUri('http://foo/bar');
+
+        $clientRepositoryMock = $this->getMockBuilder(ClientRepositoryInterface::class)->getMock();
+        $clientRepositoryMock->method('getClientEntity')->willReturn($client);
+
+        $requestMock = $this->getMockBuilder(RequestInterface::class)
+            ->setMethods(['getQuery'])
+            ->getMockForAbstractClass();
+
+        $requestMock->method('getQuery')
+            ->withConsecutive(
+                ['client_id', null, null],
+                ['redirect_uri', null, null],
+                ['scope', null, null]
+            )
+            ->willReturnOnConsecutiveCalls(
+                'foo',
+                $client->getRedirectUri(),
+                null
+            );
+
+        $grant = new AuthCodeGrant(
+            $this->getMockBuilder(AuthCodeRepositoryInterface::class)->getMock(),
+            $this->getMockBuilder(RefreshTokenRepositoryInterface::class)->getMock(),
+            new DateInterval('PT10M')
+        );
+
+        $grant->enableCodeChallengeVerifier(new PlainVerifier());
+        $grant->setClientRepository($clientRepositoryMock);
+
+        $grant->validateAuthorizationRequest($requestMock);
     }
 }

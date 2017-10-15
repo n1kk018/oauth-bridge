@@ -10,5 +10,8 @@ build
 clover.xml
 phpcs.xml
 phpunit.xml
+humbug.json
+humbuglog.json
+humbuglog.txt
 composer.phar
 composer.lock

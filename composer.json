@@ -32,6 +32,7 @@
     "require-dev": {
         "phpstan/phpstan": "@stable",
         "phpunit/phpunit": "@stable",
+        "humbug/humbug": "1.0.0-RC.0@RC",
         "squizlabs/php_codesniffer": "3.0.x-dev"
     },
     "authors": [
@@ -66,8 +67,9 @@
         }
     },
     "scripts": {
-        "phpstan": "vendor/bin/phpstan analyse -l 6 -c phpstan.neon src",
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon -l 6 src",
         "phpcs": "vendor/bin/phpcs",
-        "phpunit": "vendor/bin/phpunit -c phpunit.xml.dist tests"
+        "phpunit": "vendor/bin/phpunit --disallow-test-output",
+        "humbug": "vendor/bin/humbug"
     }
 }
