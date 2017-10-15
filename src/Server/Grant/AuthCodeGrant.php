@@ -16,6 +16,7 @@ use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
 use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Repositories\AuthCodeRepositoryInterface;
 use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
+use Preferans\Oauth\Server\CodeChallengeVerifiers\CodeChallengeVerifierInterface;
 
 /**
  * Preferans\Oauth\Server\Grant\AuthCodeGrant
@@ -30,9 +31,9 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
     private $authCodeTTL;
 
     /**
-     * @var bool
+     * @var CodeChallengeVerifierInterface[]
      */
-    private $enableCodeExchangeProof = false;
+    private $codeChallengeVerifiers = [];
 
     /**
      * @param AuthCodeRepositoryInterface     $authCodeRepository
@@ -50,9 +51,14 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
         $this->refreshTokenTTL = new DateInterval('P1M');
     }
 
-    public function enableCodeExchangeProof()
+    /**
+     * Enable a code challenge verifier on the grant.
+     *
+     * @param CodeChallengeVerifierInterface $codeChallengeVerifier
+     */
+    public function enableCodeChallengeVerifier(CodeChallengeVerifierInterface $codeChallengeVerifier)
     {
-        $this->enableCodeExchangeProof = true;
+        $this->codeChallengeVerifiers[$codeChallengeVerifier->getMethod()] = $codeChallengeVerifier;
     }
 
     /**
@@ -129,38 +135,26 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
             throw OAuthServerException::invalidRequest('code', 'Cannot decrypt the authorization code');
         }
 
-        // Validate code challenge
-        if ($this->enableCodeExchangeProof === true) {
+        // Verify code challenge
+        if (!empty($this->codeChallengeVerifiers)) {
             $codeVerifier = $this->getRequestParameter('code_verifier', $request, null);
             if ($codeVerifier === null) {
                 throw OAuthServerException::invalidRequest('code_verifier');
             }
 
-            switch ($authCodePayload->code_challenge_method) {
-                case 'plain':
-                    if (hash_equals($codeVerifier, $authCodePayload->code_challenge) === false) {
-                        throw OAuthServerException::invalidGrant('Failed to verify `code_verifier`.');
-                    }
+            if (array_key_exists($authCodePayload->code_challenge_method, $this->codeChallengeVerifiers)) {
+                $verifier = $this->codeChallengeVerifiers[$authCodePayload->code_challenge_method];
 
-                    break;
-                case 'S256':
-                    if (hash_equals(
-                            urlencode(base64_encode(hash('sha256', $codeVerifier))),
-                            $authCodePayload->code_challenge
-                        ) === false
-                    ) {
-                        throw OAuthServerException::invalidGrant('Failed to verify `code_verifier`.');
-                    }
-                    // @codeCoverageIgnoreStart
-                    break;
-                default:
+                if (!$verifier->verifyCodeChallenge($codeVerifier, $authCodePayload->code_challenge)) {
+                    throw OAuthServerException::invalidGrant('Failed to verify `code_verifier`.');
+                } else {
                     throw OAuthServerException::serverError(
                         sprintf(
                             'Unsupported code challenge method `%s`',
                             $authCodePayload->code_challenge_method
                         )
                     );
-                // @codeCoverageIgnoreEnd
+                }
             }
         }
 
@@ -259,7 +253,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
         $authorizationRequest->setState($stateParameter);
         $authorizationRequest->setScopes($scopes);
 
-        if ($this->enableCodeExchangeProof === true) {
+        if (!empty($this->codeChallengeVerifiers)) {
             $codeChallenge = $this->getQueryStringParameter('code_challenge', $request);
             if ($codeChallenge === null) {
                 throw OAuthServerException::invalidRequest('code_challenge');
@@ -273,10 +267,15 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
             }
 
             $codeChallengeMethod = $this->getQueryStringParameter('code_challenge_method', $request, 'plain');
-            if (in_array($codeChallengeMethod, ['plain', 'S256']) === false) {
+            if (!array_key_exists($codeChallengeMethod, $this->codeChallengeVerifiers)) {
+                $validVerifies = array_map(function ($method) {
+                    return '`' . $method . '`';
+                }, array_keys($this->codeChallengeVerifiers));
+
+
                 throw OAuthServerException::invalidRequest(
                     'code_challenge_method',
-                    'Code challenge method must be `plain` or `S256`'
+                    'Code challenge method must be one of ' . implode(', ', $validVerifies)
                 );
             }
 
