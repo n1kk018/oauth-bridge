@@ -205,13 +205,13 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
      */
     public function validateAuthorizationRequest(RequestInterface $request)
     {
-        $clientId = $this->getQueryStringParameter(
-            'client_id',
-            $request,
-            $this->getServerParameter('PHP_AUTH_USER', $request)
-        );
+        $clientId = $this->getQueryStringParameter('client_id', $request);
 
-        if (is_null($clientId)) {
+        if ($clientId === null) {
+            $clientId = $this->getServerParameter('PHP_AUTH_USER', $request);
+        }
+
+        if ($clientId === null) {
             throw OAuthServerException::invalidRequest('client_id');
         }
 
@@ -224,9 +224,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
 
         $redirectUri = $this->getQueryStringParameter('redirect_uri', $request);
         if ($redirectUri !== null) {
-            if (is_string($client->getRedirectUri())
-                && (strcmp($client->getRedirectUri(), $redirectUri) !== 0)
-            ) {
+            if (is_string($client->getRedirectUri()) && (strcmp($client->getRedirectUri(), $redirectUri) !== 0)) {
                 $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
             } elseif (is_array($client->getRedirectUri())
@@ -237,11 +235,13 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
             }
         }
 
+        $defaultRedirectUri = is_array($client->getRedirectUri()) ?
+            $client->getRedirectUri()[0] :
+            $client->getRedirectUri();
+
         $scopes = $this->validateScopes(
             $this->getQueryStringParameter('scope', $request),
-            is_array($client->getRedirectUri())
-                ? $client->getRedirectUri()[0]
-                : $client->getRedirectUri()
+            $defaultRedirectUri
         );
 
         $stateParameter = $this->getQueryStringParameter('state', $request);
