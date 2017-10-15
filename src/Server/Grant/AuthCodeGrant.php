@@ -2,6 +2,7 @@
 
 namespace Preferans\Oauth\Server\Grant;
 
+use DateTime;
 use DateInterval;
 use LogicException;
 use Phalcon\Http\RequestInterface;
@@ -327,7 +328,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 'auth_code_id'          => $authCode->getIdentifier(),
                 'scopes'                => $authCode->getScopes(),
                 'user_id'               => $authCode->getUserIdentifier(),
-                'expire_time'           => (new \DateTime())->add($this->authCodeTTL)->format('U'),
+                'expire_time'           => (new DateTime())->add($this->authCodeTTL)->format('U'),
                 'code_challenge'        => $authorizationRequest->getCodeChallenge(),
                 'code_challenge_method' => $authorizationRequest->getCodeChallengeMethod(),
             ];
@@ -337,11 +338,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 $this->makeRedirectUri(
                     $finalRedirectUri,
                     [
-                        'code'  => $this->encrypt(
-                            json_encode(
-                                $payload
-                            )
-                        ),
+                        'code'  => $this->encrypt(json_encode($payload)),
                         'state' => $authorizationRequest->getState(),
                     ]
                 )
