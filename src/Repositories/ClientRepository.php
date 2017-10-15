@@ -15,30 +15,16 @@ class ClientRepository extends AbstractRepository implements ClientRepositoryInt
 {
     use Traits\GrantsAwareTrait, Traits\ClientsAwareTrait, Traits\ClientGrantsAwareTrait;
 
-    protected $limitClientsToGrants = false;
-
-    /**
-     * ClientRepository constructor.
-     *
-     * @param bool $limitClientsToGrants
-     */
-    public function __construct($limitClientsToGrants = false)
-    {
-        $this->limitClientsToGrants = $limitClientsToGrants;
-    }
-
     /**
      * {@inheritdoc}
      *
-     * @param string      $clientIdentifier   The client's identifier
-     * @param string      $grantType          The grant type used
-     * @param null|string $clientSecret       The client's secret (if sent)
-     * @param bool        $mustValidateSecret If true the client must attempt to validate the secret if the client
-     *                                        is confidential
+     * @param string      $clientIdentifier The client's identifier
+     * @param null|string $grantType        The grant type used (if sent) [optional]
+     * @param null|string $clientSecret     The client's secret (if sent) [optional]
      *
      * @return ClientEntityInterface
      */
-    public function getClientEntity($clientIdentifier, $grantType, $clientSecret = null, $mustValidateSecret = true)
+    public function getClientEntity($clientIdentifier, $grantType = null, $clientSecret = null)
     {
         $builder = $this->createQueryBuilder()
             ->columns(['c.id', 'c.secret', 'c.name'])
@@ -46,11 +32,11 @@ class ClientRepository extends AbstractRepository implements ClientRepositoryInt
             ->where('c.id = :clientIdentifier:', compact('clientIdentifier'))
             ->limit(1);
 
-        if ($mustValidateSecret === true) {
+        if ($clientSecret !== null) {
             $builder->andWhere('c.secret = :clientSecret:', compact('clientSecret'));
         }
 
-        if ($this->limitClientsToGrants) {
+        if ($grantType !== null) {
             $builder
                 ->innerJoin($this->getClientGrantsModelClass(), 'cg.client_id = c.id', 'cg')
                 ->innerJoin($this->getGrantsModelClass(), 'g.id = cg.grant_id', 'g')
