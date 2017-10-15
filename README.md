@@ -1,13 +1,15 @@
 # oAuth Bridge
 
 [![Build Status](https://travis-ci.org/preferans/oauth-bridge.svg?branch=master)](https://travis-ci.org/preferans/oauth-bridge)
+[![Latest Stable Version](https://poser.pugx.org/preferans/oauth-bridge/v/stable)](https://packagist.org/packages/preferans/oauth-bridge)
+[![Phalconist](https://phalconist.phalconphp.com/preferans/oauth-bridge/default.svg)](https://phalconist.phalconphp.com/preferans/oauth-bridge)
 
 A library focused on API Authentication for Phalcon applications.
 
 The main goals of this project:
 - To provide transparent integration using oAuth industrial standards
 - To provide better performance by working with Phalcon Framework
-- To reduce inconvenience resulting from the lack of [PSR-7](www.php-fig.org/psr/psr-7/) support in Phalcon Framework (prior to v3.x)
+- To reduce inconvenience resulting from the lack of [PSR-7](http://www.php-fig.org/psr/psr-7/) support in Phalcon Framework (prior to v3.x)
 
 ## Documentation
 
