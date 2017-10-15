@@ -47,7 +47,7 @@ class BearerTokenResponse extends AbstractResponseType
 
         $responseParams = array_merge($this->getExtraParams($this->accessToken), $responseParams);
 
-        $response = $response
+        $response
             ->setStatusCode(200)
             ->setHeader('pragma', 'no-cache')
             ->setHeader('cache-control', 'no-store')
