@@ -6,7 +6,7 @@ use DateInterval;
 use League\OAuth2\Server\CryptKey;
 use Phalcon\Http\RequestInterface;
 use League\Event\EmitterAwareInterface;
-use Preferans\Oauth\Server\ResponseTypeInterface;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;

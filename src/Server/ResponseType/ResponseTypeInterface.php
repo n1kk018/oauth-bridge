@@ -1,13 +1,13 @@
 <?php
 
-namespace Preferans\Oauth\Server;
+namespace Preferans\Oauth\Server\ResponseType;
 
 use Phalcon\Http\ResponseInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 
 /**
- * Preferans\Oauth\Server\ResponseTypeInterface
+ * Preferans\Oauth\Server\ResponseType\ResponseTypeInterface
  *
  * @package Preferans\Oauth\Server
  */

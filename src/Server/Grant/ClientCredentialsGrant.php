@@ -4,7 +4,7 @@ namespace Preferans\Oauth\Server\Grant;
 
 use DateInterval;
 use Phalcon\Http\RequestInterface;
-use Preferans\Oauth\Server\ResponseTypeInterface;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 
 /**
  * Preferans\Oauth\Server\Grant\ClientCredentialsGrant

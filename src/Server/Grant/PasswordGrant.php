@@ -5,7 +5,7 @@ namespace Preferans\Oauth\Server\Grant;
 use DateInterval;
 use Phalcon\Http\RequestInterface;
 use Preferans\Oauth\Server\RequestEvent;
-use Preferans\Oauth\Server\ResponseTypeInterface;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;

@@ -15,6 +15,7 @@ use Preferans\Oauth\Server\ResponseType\BearerTokenResponse;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 
 /**
  * Preferans\Oauth\Server\AuthorizationServer
