@@ -2,7 +2,6 @@
 
 namespace Preferans\Oauth\Repositories;
 
-
 use Phalcon\Mvc\Model\ManagerInterface;
 use Phalcon\Mvc\Model\Query\BuilderInterface;
 
