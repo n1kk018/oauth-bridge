@@ -27,7 +27,7 @@ before_install:
   - if [ ! -z "${GH_TOKEN}" ]; then composer config github-oauth.github.com ${GH_TOKEN}; echo "Configured Github token"; fi;
 
 install:
-  - bash bash tests/_ci/install-phalcon.sh
+  - bash tests/_ci/install-phalcon.sh
   - composer install --prefer-dist --no-interaction --quiet --no-ansi --no-progress --optimize-autoloader --dev --no-suggest
   - $(phpenv which php) --ri phalcon
 
