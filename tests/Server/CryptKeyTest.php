@@ -21,6 +21,7 @@ class CryptKeyTest extends TestCase
     public function shouldCreateKeyInstance()
     {
         $keyFile = __DIR__ . '/../_data/public.key';
+        chmod($keyFile, 0600);
         $key = new CryptKey($keyFile, 'secret');
 
         $this->assertEquals('file://' . $keyFile, $key->getKeyPath());
