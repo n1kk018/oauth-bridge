@@ -7,7 +7,7 @@ use Preferans\Oauth\Entities\AccessTokenEntity;
 use Preferans\Oauth\Entities\ScopeEntityInterface;
 use Preferans\Oauth\Entities\ClientEntityInterface;
 use Preferans\Oauth\Entities\AccessTokenEntityInterface;
-use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use Preferans\Oauth\Exceptions\UniqueTokenIdentifierConstraintViolationException;
 
 /**
  * Preferans\Oauth\Repositories\AccessTokenRepository

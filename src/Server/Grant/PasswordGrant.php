@@ -8,7 +8,7 @@ use Preferans\Oauth\Server\RequestEvent;
 use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Entities\UserEntityInterface;
 use Preferans\Oauth\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Preferans\Oauth\Exceptions\OAuthServerException;
 use Preferans\Oauth\Repositories\UserRepositoryInterface;
 use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
 

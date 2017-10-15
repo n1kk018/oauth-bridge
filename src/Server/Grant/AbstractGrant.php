@@ -13,7 +13,7 @@ use Preferans\Oauth\Server\RequestEvent;
 use Preferans\Oauth\Traits\EventsAwareTrait;
 use Preferans\Oauth\Entities\ScopeEntityInterface;
 use Preferans\Oauth\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Preferans\Oauth\Exceptions\OAuthServerException;
 use Preferans\Oauth\Entities\AccessTokenEntityInterface;
 use Preferans\Oauth\Entities\AuthCodeEntityInterface;
 use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
@@ -24,7 +24,7 @@ use Preferans\Oauth\Repositories\ClientRepositoryInterface;
 use Preferans\Oauth\Repositories\AuthCodeRepositoryInterface;
 use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
 use Preferans\Oauth\Repositories\AccessTokenRepositoryInterface;
-use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use Preferans\Oauth\Exceptions\UniqueTokenIdentifierConstraintViolationException;
 
 /**
  * Preferans\Oauth\Server\Grant\AbstractGrant

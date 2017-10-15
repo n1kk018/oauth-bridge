@@ -5,7 +5,7 @@ namespace Preferans\Oauth\Repositories;
 use Preferans\Oauth\Entities\ScopeEntity;
 use Preferans\Oauth\Entities\ScopeEntityInterface;
 use Preferans\Oauth\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Preferans\Oauth\Exceptions\OAuthServerException;
 
 /**
  * Preferans\Oauth\Repositories\ClientRepository

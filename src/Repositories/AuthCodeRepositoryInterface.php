@@ -3,7 +3,7 @@
 namespace Preferans\Oauth\Repositories;
 
 use Preferans\Oauth\Entities\AuthCodeEntityInterface;
-use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use Preferans\Oauth\Exceptions\UniqueTokenIdentifierConstraintViolationException;
 
 /**
  * Preferans\Oauth\Repositories\AuthCodeRepositoryInterface

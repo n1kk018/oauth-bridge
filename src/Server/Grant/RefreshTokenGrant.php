@@ -3,7 +3,7 @@
 namespace Preferans\Oauth\Server\Grant;
 
 use DateInterval;
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Preferans\Oauth\Exceptions\OAuthServerException;
 use Phalcon\Http\RequestInterface;
 use Preferans\Oauth\Server\RequestEvent;
 use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;

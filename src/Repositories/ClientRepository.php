@@ -3,7 +3,7 @@
 namespace Preferans\Oauth\Repositories;
 
 use Preferans\Oauth\Entities\ClientEntity;
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Preferans\Oauth\Exceptions\OAuthServerException;
 use Preferans\Oauth\Entities\ClientEntityInterface;
 
 /**

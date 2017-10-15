@@ -6,7 +6,7 @@ use Phalcon\Security;
 use Preferans\Oauth\Entities\UserEntity;
 use Preferans\Oauth\Entities\UserEntityInterface;
 use Preferans\Oauth\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Preferans\Oauth\Exceptions\OAuthServerException;
 
 /**
  * Preferans\Oauth\Repositories\UserRepository

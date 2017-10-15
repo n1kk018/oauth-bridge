@@ -9,7 +9,7 @@ use Phalcon\Http\ResponseInterface;
 use Phalcon\Events\EventsAwareInterface;
 use Preferans\Oauth\Traits\EventsAwareTrait;
 use Preferans\Oauth\Server\Grant\GrantTypeInterface;
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Preferans\Oauth\Exceptions\OAuthServerException;
 use Preferans\Oauth\Repositories\ScopeRepositoryInterface;
 use Preferans\Oauth\Repositories\ClientRepositoryInterface;
 use Preferans\Oauth\Server\ResponseType\BearerTokenResponse;
