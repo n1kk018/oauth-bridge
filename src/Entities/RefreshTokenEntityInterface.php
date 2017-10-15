@@ -3,7 +3,7 @@
 namespace Preferans\Oauth\Entities;
 
 /**
- *  Preferans\Oauth\Entities\RefreshTokenEntityInterface
+ * Preferans\Oauth\Entities\RefreshTokenEntityInterface
  *
  * @package Preferans\Oauth\Entities
  */
