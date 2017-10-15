@@ -2,9 +2,11 @@
 
 namespace Preferans\Oauth\Repositories;
 
-use Preferans\Oauth\Entities;
 use Preferans\Oauth\Exceptions;
-use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use Preferans\Oauth\Entities\AccessTokenEntity;
+use Preferans\Oauth\Entities\ScopeEntityInterface;
+use Preferans\Oauth\Entities\ClientEntityInterface;
+use Preferans\Oauth\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 
 /**
@@ -19,15 +21,15 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
     /**
      * {@inheritdoc}
      *
-     * @param Entities\ClientEntityInterface  $clientEntity
-     * @param Entities\ScopeEntityInterface[] $scopes
+     * @param ClientEntityInterface  $clientEntity
+     * @param ScopeEntityInterface[] $scopes
      * @param mixed                           $userIdentifier
      *
-     * @return Entities\AccessTokenEntityInterface
+     * @return AccessTokenEntityInterface
      */
-    public function getNewToken(Entities\ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
+    public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
-        $accessToken = new Entities\AccessTokenEntity();
+        $accessToken = new AccessTokenEntity();
         $accessToken->setClient($clientEntity);
 
         foreach ($scopes as $scope) {
@@ -44,11 +46,11 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
     /**
      * {@inheritdoc}
      *
-     * @param Entities\AccessTokenEntityInterface $accessTokenEntity
+     * @param AccessTokenEntityInterface $accessTokenEntity
      *
      * @throws UniqueTokenIdentifierConstraintViolationException
      */
-    public function persistNewAccessToken(Entities\AccessTokenEntityInterface $accessTokenEntity)
+    public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
         if ($this->findByIdentity($accessTokenEntity->getIdentifier())) {
             throw UniqueTokenIdentifierConstraintViolationException::create();

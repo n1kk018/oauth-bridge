@@ -5,7 +5,6 @@ namespace Preferans\Oauth\Repositories;
 use Preferans\Oauth\Entities\ClientEntity;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Preferans\Oauth\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
 /**
  * Preferans\Oauth\Repositories\ClientRepository

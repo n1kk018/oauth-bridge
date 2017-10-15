@@ -6,7 +6,6 @@ use Preferans\Oauth\Entities\ScopeEntity;
 use Preferans\Oauth\Entities\ScopeEntityInterface;
 use Preferans\Oauth\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 /**
  * Preferans\Oauth\Repositories\ClientRepository

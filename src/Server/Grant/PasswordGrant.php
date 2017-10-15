@@ -9,8 +9,8 @@ use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Entities\UserEntityInterface;
 use Preferans\Oauth\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Repositories\UserRepositoryInterface;
-use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use Preferans\Oauth\Repositories\UserRepositoryInterface;
+use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
 
 /**
  * Preferans\Oauth\Server\Grant\PasswordGrant

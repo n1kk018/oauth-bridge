@@ -18,12 +18,12 @@ use Preferans\Oauth\Entities\AccessTokenEntityInterface;
 use Preferans\Oauth\Entities\AuthCodeEntityInterface;
 use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
 use Preferans\Oauth\Entities\RefreshTokenEntityInterface;
-use League\OAuth2\Server\Repositories\UserRepositoryInterface;
-use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
-use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
-use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
-use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use Preferans\Oauth\Repositories\UserRepositoryInterface;
+use Preferans\Oauth\Repositories\ScopeRepositoryInterface;
+use Preferans\Oauth\Repositories\ClientRepositoryInterface;
+use Preferans\Oauth\Repositories\AuthCodeRepositoryInterface;
+use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
+use Preferans\Oauth\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 
 /**
@@ -215,6 +215,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      * {@inheritdoc}
      *
      * @param RequestInterface $request
+     *
      * @throws LogicException
      */
     public function validateAuthorizationRequest(RequestInterface $request)
@@ -352,13 +353,12 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
     /**
      * Retrieve cookie parameter.
      *
-     * @param string           $parameter
-     * @param RequestInterface $request
-     * @param mixed            $default
+     * @param string $parameter
+     * @param mixed  $default
      *
      * @return null|string
      */
-    protected function getCookieParameter($parameter, RequestInterface $request, $default = null)
+    protected function getCookieParameter($parameter, $default = null)
     {
         if (!$this->getDI()->has('cookies')) {
             return $default;

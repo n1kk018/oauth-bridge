@@ -2,8 +2,6 @@
 
 namespace Preferans\Oauth\Server;
 
-use Phalcon\Http\RequestInterface;
-
 /**
  * Preferans\Oauth\Server\RequestEvent
  *

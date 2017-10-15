@@ -8,9 +8,9 @@ use Phalcon\Http\RequestInterface;
 use Phalcon\Events\EventsAwareInterface;
 use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
 use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
-use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
-use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use Preferans\Oauth\Repositories\ScopeRepositoryInterface;
+use Preferans\Oauth\Repositories\ClientRepositoryInterface;
+use Preferans\Oauth\Repositories\AccessTokenRepositoryInterface;
 
 /**
  * Preferans\Oauth\Server\Grant\GrantTypeInterface
