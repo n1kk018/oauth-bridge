@@ -4,9 +4,12 @@
 
 A library focused on API Authentication for Phalcon applications.
 
-## Usage
+The main goals of this project:
+- To provide transparent integration using oAuth industrial standards
+- To provide better performance by working with Phalcon Framework
+- To reduce inconvenience resulting from the lack of [PSR-7](www.php-fig.org/psr/psr-7/) support in Phalcon Framework (prior to v3.x)
 
-### Documentation
+## Documentation
 
 The current version can be seen at [preferans.gitbooks.io](https://preferans.gitbooks.io/oauth-bridge/content/).
 
