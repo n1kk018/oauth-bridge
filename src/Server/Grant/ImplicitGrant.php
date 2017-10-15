@@ -11,7 +11,7 @@ use Preferans\Oauth\Server\ResponseTypeInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\ResponseTypes\RedirectResponse;
+use Preferans\Oauth\Server\ResponseType\RedirectResponse;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
