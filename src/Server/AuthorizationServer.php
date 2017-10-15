@@ -190,9 +190,9 @@ class AuthorizationServer implements EventsAwareInterface
     {
         if (!$this->responseType instanceof ResponseTypeInterface) {
             $this->responseType = new BearerTokenResponse();
+            $this->responseType->setPrivateKey($this->privateKey);
         }
 
-        $this->responseType->setPrivateKey($this->privateKey);
         $this->responseType->setEncryptionKey($this->encryptionKey);
 
         return $this->responseType;
