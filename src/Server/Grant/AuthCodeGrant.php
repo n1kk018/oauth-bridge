@@ -81,7 +81,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
 
         // Validate the authorization code
         try {
-            $authCodePayload = json_decode($this->decrypt($encryptedAuthCode));
+            $authCodePayload = json_decode($this->getCrypt()->decrypt($encryptedAuthCode, $this->encryptionKey));
             if (time() > $authCodePayload->expire_time) {
                 throw OAuthServerException::invalidRequest('code', 'Authorization code has expired');
             }
@@ -338,7 +338,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 $this->makeRedirectUri(
                     $finalRedirectUri,
                     [
-                        'code'  => $this->encrypt(json_encode($payload)),
+                        'code'  => $this->getCrypt()->encrypt(json_encode($payload), $this->encryptionKey),
                         'state' => $authorizationRequest->getState(),
                     ]
                 )

@@ -3,7 +3,7 @@
 namespace Preferans\Oauth\Server\ResponseType;
 
 use League\OAuth2\Server\CryptKey;
-use League\OAuth2\Server\CryptTrait;
+use Preferans\Oauth\Traits\CryptAwareTrait;
 use Preferans\Oauth\Entities\AccessTokenEntityInterface;
 use Preferans\Oauth\Entities\RefreshTokenEntityInterface;
 
@@ -14,7 +14,7 @@ use Preferans\Oauth\Entities\RefreshTokenEntityInterface;
  */
 abstract class AbstractResponseType implements ResponseTypeInterface
 {
-    use CryptTrait;
+    use CryptAwareTrait;
 
     /**
      * @var AccessTokenEntityInterface|null

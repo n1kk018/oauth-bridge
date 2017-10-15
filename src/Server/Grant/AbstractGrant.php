@@ -8,19 +8,20 @@ use LogicException;
 use Phalcon\Di\Injectable;
 use League\OAuth2\Server\CryptKey;
 use Phalcon\Http\RequestInterface;
-use League\OAuth2\Server\CryptTrait;
 use Preferans\Oauth\Server\RequestEvent;
+use Phalcon\Http\Response\CookiesInterface;
+use Preferans\Oauth\Traits\CryptAwareTrait;
 use Preferans\Oauth\Traits\EventsAwareTrait;
 use Preferans\Oauth\Entities\ScopeEntityInterface;
 use Preferans\Oauth\Entities\ClientEntityInterface;
 use Preferans\Oauth\Exceptions\OAuthServerException;
-use Preferans\Oauth\Entities\AccessTokenEntityInterface;
 use Preferans\Oauth\Entities\AuthCodeEntityInterface;
-use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
+use Preferans\Oauth\Entities\AccessTokenEntityInterface;
 use Preferans\Oauth\Entities\RefreshTokenEntityInterface;
 use Preferans\Oauth\Repositories\UserRepositoryInterface;
 use Preferans\Oauth\Repositories\ScopeRepositoryInterface;
 use Preferans\Oauth\Repositories\ClientRepositoryInterface;
+use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
 use Preferans\Oauth\Repositories\AuthCodeRepositoryInterface;
 use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
 use Preferans\Oauth\Repositories\AccessTokenRepositoryInterface;
@@ -29,12 +30,12 @@ use Preferans\Oauth\Exceptions\UniqueTokenIdentifierConstraintViolationException
 /**
  * Preferans\Oauth\Server\Grant\AbstractGrant
  *
- * @property \Phalcon\Http\Response\Cookies|\Phalcon\Http\Response\CookiesInterface $cookies
+ * @property CookiesInterface $cookies
  * @package Preferans\Oauth\Server\Grant
  */
 abstract class AbstractGrant extends Injectable implements GrantTypeInterface
 {
-    use EventsAwareTrait, CryptTrait;
+    use EventsAwareTrait, CryptAwareTrait;
 
     const SCOPE_DELIMITER_STRING = ' ';
 
