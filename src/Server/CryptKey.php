@@ -2,6 +2,9 @@
 
 namespace Preferans\Oauth\Server;
 
+use LogicException;
+use RuntimeException;
+
 /**
  * Preferans\Oauth\Server\CryptKey
  *
@@ -24,9 +27,13 @@ class CryptKey
     protected $passPhrase;
 
     /**
+     * CryptKey constructor.
+     *
      * @param string      $keyPath
      * @param null|string $passPhrase
      * @param bool        $keyPermissionsCheck
+     *
+     * @throws LogicException
      */
     public function __construct($keyPath, $passPhrase = null, $keyPermissionsCheck = true)
     {
@@ -39,7 +46,7 @@ class CryptKey
         }
 
         if (!file_exists($keyPath) || !is_readable($keyPath)) {
-            throw new \LogicException(sprintf('Key path "%s" does not exist or is not readable', $keyPath));
+            throw new LogicException(sprintf('Key path "%s" does not exist or is not readable', $keyPath));
         }
 
         if ($keyPermissionsCheck === true) {
@@ -59,11 +66,12 @@ class CryptKey
     }
 
     /**
+     * Saves a key to a file.
+     *
      * @param string $key
      *
-     * @throws \RuntimeException
-     *
      * @return string
+     * @throws RuntimeException
      */
     private function saveKeyToFile($key)
     {
@@ -71,23 +79,17 @@ class CryptKey
         $keyPath = $tmpDir . '/' . sha1($key) . '.key';
 
         if (!file_exists($keyPath) && !touch($keyPath)) {
-            // @codeCoverageIgnoreStart
-            throw new \RuntimeException(sprintf('"%s" key file could not be created', $keyPath));
-            // @codeCoverageIgnoreEnd
+            throw new RuntimeException(sprintf('"%s" key file could not be created', $keyPath));
         }
 
         if (file_put_contents($keyPath, $key) === false) {
-            // @codeCoverageIgnoreStart
-            throw new \RuntimeException(sprintf('Unable to write key file to temporary directory "%s"', $tmpDir));
-            // @codeCoverageIgnoreEnd
+            throw new RuntimeException(sprintf('Unable to write key file to temporary directory "%s"', $tmpDir));
         }
 
         if (chmod($keyPath, 0600) === false) {
-            // @codeCoverageIgnoreStart
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf('The key file "%s" file mode could not be changed with chmod to 600', $keyPath)
             );
-            // @codeCoverageIgnoreEnd
         }
 
         return 'file://' . $keyPath;
