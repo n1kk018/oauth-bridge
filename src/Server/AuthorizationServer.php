@@ -3,7 +3,6 @@
 namespace Preferans\Oauth\Server;
 
 use DateInterval;
-use League\OAuth2\Server\CryptKey;
 use Phalcon\Http\RequestInterface;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Events\EventsAwareInterface;

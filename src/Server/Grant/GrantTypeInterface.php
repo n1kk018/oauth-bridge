@@ -3,13 +3,13 @@
 namespace Preferans\Oauth\Server\Grant;
 
 use DateInterval;
-use League\OAuth2\Server\CryptKey;
 use Phalcon\Http\RequestInterface;
+use Preferans\Oauth\Server\CryptKey;
 use Phalcon\Events\EventsAwareInterface;
-use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
-use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Repositories\ScopeRepositoryInterface;
 use Preferans\Oauth\Repositories\ClientRepositoryInterface;
+use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Repositories\AccessTokenRepositoryInterface;
 
 /**

@@ -2,7 +2,7 @@
 
 namespace Preferans\Oauth\Server\ResponseType;
 
-use League\OAuth2\Server\CryptKey;
+use Preferans\Oauth\Server\CryptKey;
 use Preferans\Oauth\Traits\CryptAwareTrait;
 use Preferans\Oauth\Entities\AccessTokenEntityInterface;
 use Preferans\Oauth\Entities\RefreshTokenEntityInterface;

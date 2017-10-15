@@ -5,7 +5,7 @@ namespace Preferans\Oauth\Entities\Traits;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-use League\OAuth2\Server\CryptKey;
+use Preferans\Oauth\Server\CryptKey;
 use Preferans\Oauth\Entities\ClientEntityInterface;
 use Preferans\Oauth\Entities\ScopeEntityInterface;
 

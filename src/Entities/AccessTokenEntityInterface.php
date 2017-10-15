@@ -2,7 +2,7 @@
 
 namespace Preferans\Oauth\Entities;
 
-use League\OAuth2\Server\CryptKey;
+use Preferans\Oauth\Server\CryptKey;
 
 /**
  * Preferans\Oauth\Entities\AccessTokenEntityInterface
