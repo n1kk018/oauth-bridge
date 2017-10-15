@@ -142,7 +142,7 @@ class ImplicitGrant extends AbstractAuthorizeGrant
         );
 
         if (!$client instanceof ClientEntityInterface) {
-            $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
+            $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
             throw OAuthServerException::invalidClient();
         }
 
@@ -151,12 +151,12 @@ class ImplicitGrant extends AbstractAuthorizeGrant
             if (is_string($client->getRedirectUri())
                 && (strcmp($client->getRedirectUri(), $redirectUri) !== 0)
             ) {
-                $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
+                $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
             } elseif (is_array($client->getRedirectUri())
                 && in_array($redirectUri, $client->getRedirectUri()) === false
             ) {
-                $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
+                $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
             }
         }

@@ -7,13 +7,13 @@ use DateInterval;
 use LogicException;
 use Phalcon\Http\RequestInterface;
 use Preferans\Oauth\Server\RequestEvent;
-use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use Preferans\Oauth\Server\ResponseType\RedirectResponse;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
@@ -229,7 +229,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
         );
 
         if (!$client instanceof ClientEntityInterface) {
-            $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
+            $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
             throw OAuthServerException::invalidClient();
         }
 
@@ -238,12 +238,12 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
             if (is_string($client->getRedirectUri())
                 && (strcmp($client->getRedirectUri(), $redirectUri) !== 0)
             ) {
-                $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
+                $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
             } elseif (is_array($client->getRedirectUri())
                 && in_array($redirectUri, $client->getRedirectUri()) === false
             ) {
-                $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
+                $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
             }
         }

@@ -5,26 +5,26 @@ namespace Preferans\Oauth\Server;
 use DateInterval;
 use League\OAuth2\Server\CryptKey;
 use Phalcon\Http\RequestInterface;
-use League\Event\EmitterAwareTrait;
 use Phalcon\Http\ResponseInterface;
-use League\Event\EmitterAwareInterface;
+use Phalcon\Events\EventsAwareInterface;
+use Preferans\Oauth\Traits\EventsAwareTrait;
 use Preferans\Oauth\Server\Grant\GrantTypeInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Preferans\Oauth\Server\ResponseType\BearerTokenResponse;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
-use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 
 /**
  * Preferans\Oauth\Server\AuthorizationServer
  *
  * @package Preferans\Oauth\Server
  */
-class AuthorizationServer implements EmitterAwareInterface
+class AuthorizationServer implements EventsAwareInterface
 {
-    use EmitterAwareTrait;
+    use EventsAwareTrait;
 
     /**
      * @var GrantTypeInterface[]
@@ -112,7 +112,7 @@ class AuthorizationServer implements EmitterAwareInterface
         $grantType->setClientRepository($this->clientRepository);
         $grantType->setScopeRepository($this->scopeRepository);
         $grantType->setPrivateKey($this->privateKey);
-        $grantType->setEmitter($this->getEmitter());
+        $grantType->setEventsManager($this->getEventsManager());
         $grantType->setEncryptionKey($this->encryptionKey);
 
         $this->enabledGrantTypes[$grantType->getIdentifier()] = $grantType;

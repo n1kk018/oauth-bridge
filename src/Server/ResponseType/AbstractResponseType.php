@@ -4,7 +4,6 @@ namespace Preferans\Oauth\Server\ResponseType;
 
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\CryptTrait;
-use Preferans\Oauth\Server\ResponseTypeInterface;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 

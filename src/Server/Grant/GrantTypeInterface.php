@@ -5,9 +5,9 @@ namespace Preferans\Oauth\Server\Grant;
 use DateInterval;
 use League\OAuth2\Server\CryptKey;
 use Phalcon\Http\RequestInterface;
-use League\Event\EmitterAwareInterface;
-use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
+use Phalcon\Events\EventsAwareInterface;
 use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
@@ -17,7 +17,7 @@ use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
  *
  * @package Preferans\Oauth\Server\Grant
  */
-interface GrantTypeInterface extends EmitterAwareInterface
+interface GrantTypeInterface extends EventsAwareInterface
 {
     /**
      * Set refresh token TTL.

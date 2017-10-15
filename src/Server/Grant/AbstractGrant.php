@@ -8,9 +8,9 @@ use LogicException;
 use Phalcon\Di\Injectable;
 use League\OAuth2\Server\CryptKey;
 use Phalcon\Http\RequestInterface;
-use League\Event\EmitterAwareTrait;
 use League\OAuth2\Server\CryptTrait;
 use Preferans\Oauth\Server\RequestEvent;
+use Preferans\Oauth\Traits\EventsAwareTrait;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -34,7 +34,7 @@ use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationExcep
  */
 abstract class AbstractGrant extends Injectable implements GrantTypeInterface
 {
-    use EmitterAwareTrait, CryptTrait;
+    use EventsAwareTrait, CryptTrait;
 
     const SCOPE_DELIMITER_STRING = ' ';
 
@@ -261,7 +261,8 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
         );
 
         if (!$client instanceof ClientEntityInterface) {
-            $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
+            $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
+
             throw OAuthServerException::invalidClient();
         }
 
@@ -271,12 +272,12 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
             if (is_string($client->getRedirectUri())
                 && (strcmp($client->getRedirectUri(), $redirectUri) !== 0)
             ) {
-                $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
+                $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
             } elseif (is_array($client->getRedirectUri())
                 && in_array($redirectUri, $client->getRedirectUri()) === false
             ) {
-                $this->getEmitter()->emit(new RequestEvent(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request));
+                $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
             }
         }
