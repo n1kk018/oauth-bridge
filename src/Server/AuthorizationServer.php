@@ -10,8 +10,8 @@ use Phalcon\Events\EventsAwareInterface;
 use Preferans\Oauth\Traits\EventsAwareTrait;
 use Preferans\Oauth\Server\Grant\GrantTypeInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
 use Preferans\Oauth\Server\ResponseType\BearerTokenResponse;
+use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
 use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
@@ -40,7 +40,6 @@ class AuthorizationServer implements EventsAwareInterface
      * @var CryptKey
      */
     protected $privateKey;
-
 
     /**
      * @var null|ResponseTypeInterface

@@ -7,12 +7,12 @@ use DateInterval;
 use LogicException;
 use Phalcon\Http\RequestInterface;
 use Preferans\Oauth\Server\RequestEvent;
-use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Preferans\Oauth\Server\ResponseType\RedirectResponse;
-use League\OAuth2\Server\RequestTypes\AuthorizationRequest;
+use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
 /**
