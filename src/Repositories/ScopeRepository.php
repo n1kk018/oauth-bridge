@@ -127,7 +127,10 @@ class ScopeRepository extends AbstractRepository implements ScopeRepositoryInter
         }
 
         foreach ($result as $scope) {
-            $entities[] = $scope;
+            $entity = new ScopeEntity();
+            $entity->setIdentifier($scope->id);
+
+            $entities[] = $entity;
         }
 
         return $entities;
