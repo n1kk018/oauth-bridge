@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit
+    colors="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    stopOnError="true"
+    stopOnFailure="true"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    bootstrap="tests/Bootstrap.php">
+
+    <testsuites name="General Test Suite">
+        <directory>./tests/</directory>
+    </testsuites>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log
+            type="coverage-text"
+            target="php://stdout"
+            title="preferans/oauth-bridge"
+            charset="UTF-8" yui="true"
+            highlight="true"
+            lowUpperBound="60"
+            highLowerBound="90"/>
+
+        <log
+            type="coverage-html"
+            target="build/coverage"
+            title="preferans/oauth-bridge"
+            charset="UTF-8" yui="true"
+            highlight="true"
+            lowUpperBound="60"
+            highLowerBound="90"/>
+    </logging>
+</phpunit>
