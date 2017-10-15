@@ -255,12 +255,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
         // If the client is confidential require the client secret
         $clientSecret = $this->getRequestParameter('client_secret', $request, $basicAuthPassword);
 
-        $client = $this->clientRepository->getClientEntity(
-            $clientId,
-            $this->getIdentifier(),
-            $clientSecret,
-            true
-        );
+        $client = $this->clientRepository->getClientEntity($clientId, $this->getIdentifier(), $clientSecret);
 
         if (!$client instanceof ClientEntityInterface) {
             $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
