@@ -32,7 +32,8 @@ install:
   - $(phpenv which php) --ri phalcon
 
 script:
-  - vendor/bin/phpcs
+  - composer phpcs
+  - composer phpstan
 
 notifications:
   email:
