@@ -2,18 +2,30 @@
     "name": "preferans/oauth-bridge",
     "license": "MIT",
     "type": "library",
+    "homepage": "https://preferans.gitbooks.io/oauth-bridge/content",
     "description": "A library focused on API Authentication for Phalcon applications.",
     "keywords": [
         "auth",
+        "oauth",
+        "oauth 2",
+        "oauth 2.0",
+        "server",
+        "auth",
+        "authorization",
+        "authorisation",
+        "authentication",
         "api",
         "oauth",
         "oauth2",
         "micro",
         "phalcon",
-        "preferans"
+        "preferans",
+        "resource",
+        "secure"
     ],
     "require": {
         "php": ">=7.0 <7.2",
+        "ext-openssl": "*",
         "ext-phalcon": ">=3.2.0 <4.0",
         "league/oauth2-server": "^6.0"
     },
@@ -24,9 +36,24 @@
     "authors": [
         {
             "name": "Serghei Iakovlev",
-            "email": "serghei@phalconphp.coms"
+            "email": "serghei@phalconphp.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Alex Bilbie",
+            "email": "hello@alexbilbie.com",
+            "homepage": "http://www.alexbilbie.com",
+            "role": "Developer"
         }
     ],
+    "support": {
+        "source": "https://github.com/preferans/oauth-bridge",
+        "issues": "https://github.com/preferans/oauth-bridge/issues",
+        "docs": "https://preferans.gitbooks.io/oauth-bridge/content"
+    },
+    "conflict": {
+        "league/oauth2-server": "*"
+    },
     "autoload": {
         "psr-4": {
             "Preferans\\Oauth\\": "src/"
