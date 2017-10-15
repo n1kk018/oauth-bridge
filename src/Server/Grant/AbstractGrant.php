@@ -339,10 +339,6 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      */
     protected function getQueryStringParameter($parameter, RequestInterface $request, $default = null)
     {
-        if (!$request->hasQuery($parameter)) {
-            return $default;
-        }
-
         return $request->getQuery($parameter, null, $default);
     }
 
