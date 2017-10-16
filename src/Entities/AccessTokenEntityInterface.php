@@ -2,6 +2,7 @@
 
 namespace Preferans\Oauth\Entities;
 
+use Lcobucci\JWT\Token;
 use Preferans\Oauth\Server\CryptKey;
 
 /**
@@ -16,7 +17,7 @@ interface AccessTokenEntityInterface extends TokenInterface
      *
      * @param CryptKey $privateKey
      *
-     * @return string
+     * @return Token
      */
     public function convertToJWT(CryptKey $privateKey);
 }
