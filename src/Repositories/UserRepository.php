@@ -49,7 +49,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             $builder
                 ->innerJoin($this->getUserClientsModelClass(), 'uc.user_id = u.id', 'uc')
                 ->innerJoin($this->getClientsModelClass(), 'c.id = uc.client_id', 'c')
-                ->andWhere('Client.id = :client_id:', [
+                ->andWhere('c.id = :client_id:', [
                     'client_id' => $client->getIdentifier(),
                 ]);
         }
