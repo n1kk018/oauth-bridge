@@ -19,7 +19,18 @@ class S256VerifierTest extends TestCase
     {
         $verifier = new S256Verifier();
 
-        $this->assertTrue($verifier->verifyCodeChallenge('foo', urlencode(base64_encode(hash('sha256', 'foo')))));
-        $this->assertFalse($verifier->verifyCodeChallenge('foo', urlencode(base64_encode(hash('sha256', 'bar')))));
+        $this->assertTrue(
+            $verifier->verifyCodeChallenge(
+                'foo',
+                strtr(rtrim(base64_encode(hash('sha256', 'foo')), '='), '+/', '-_')
+            )
+        );
+
+        $this->assertFalse(
+            $verifier->verifyCodeChallenge(
+                'foo',
+                strtr(rtrim(base64_encode(hash('sha256', 'bar')), '='), '+/', '-_')
+            )
+        );
     }
 }
