@@ -67,7 +67,7 @@
         }
     },
     "scripts": {
-        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon -l 6 src",
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon -l 7 src",
         "phpcs": "vendor/bin/phpcs",
         "phpunit": "vendor/bin/phpunit --disallow-test-output",
         "humbug": "vendor/bin/humbug"
