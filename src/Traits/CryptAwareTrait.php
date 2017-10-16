@@ -41,7 +41,7 @@ trait CryptAwareTrait
     public function getCrypt()
     {
         if (!$this->crypt) {
-            $this->setCrypt(new Crypt());
+            $this->crypt = new Crypt();
         }
 
         return $this->crypt;

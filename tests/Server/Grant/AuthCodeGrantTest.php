@@ -403,7 +403,63 @@ class AuthCodeGrantTest extends TestCase
         } catch (OAuthServerException $e) {
             $this->assertEquals($e->getHint(), 'Check the `code_verifier` parameter');
         }
+    }
 
+    /**
+     * @test
+     * @expectedException \Preferans\Oauth\Exceptions\OAuthServerException
+     * @expectedExceptionCode 3
+     */
+    public function shouldValidateAuthCodePayload()
+    {
+        $clientRepositoryMock = $this->getClientMock('foo');
+
+        $accessTokenRepositoryMock = $this->getMockBuilder(AccessTokenRepositoryInterface::class)->getMock();
+        $accessTokenRepositoryMock->method('getNewToken')->willReturn(new AccessTokenEntity());
+        $accessTokenRepositoryMock->method('persistNewAccessToken')->willReturnSelf();
+
+        $refreshTokenRepositoryMock = $this->getMockBuilder(RefreshTokenRepositoryInterface::class)->getMock();
+        $refreshTokenRepositoryMock->method('persistNewRefreshToken')->willReturnSelf();
+        $refreshTokenRepositoryMock->method('getNewRefreshToken')->willReturn(new RefreshTokenEntity());
+
+        $grant = new AuthCodeGrant(
+            $this->getMockBuilder(AuthCodeRepositoryInterface::class)->getMock(),
+            $this->getMockBuilder(RefreshTokenRepositoryInterface::class)->getMock(),
+            new DateInterval('PT10M')
+        );
+
+        $crypt = new Crypt();
+
+        $encryptionKey = (new Random)->base64(36);
+        $crypt->setKey($encryptionKey);
+
+        $grant->setClientRepository($clientRepositoryMock);
+        $grant->setAccessTokenRepository($accessTokenRepositoryMock);
+        $grant->setRefreshTokenRepository($refreshTokenRepositoryMock);
+        $grant->setEncryptionKey($encryptionKey);
+
+        $requestMock = $this->getRequestMock();
+
+        $requestMock
+            ->method('get')
+            ->withConsecutive(
+                ['client_id' , null, null],
+                ['client_secret' , null, null],
+                ['redirect_uri' , null, null],
+                ['code' , null, null],
+                ['redirect_uri' , null, null],
+                ['grant_type', null, null]
+            )
+            ->willReturnOnConsecutiveCalls(
+                'foo',
+                null,
+                'http://foo/bar',
+                $crypt->encrypt(json_encode(['scopes' => ''])),
+                'http://foo/bar',
+                'authorization_code'
+            );
+
+        $grant->respondToAccessTokenRequest($requestMock, new ResponseTypeStub(), new DateInterval('PT10M'));
     }
 
     public function codeChallengeProvider()

@@ -13,8 +13,8 @@ use Preferans\Oauth\Entities\ClientEntityInterface;
 use Preferans\Oauth\Exceptions\OAuthServerException;
 use Preferans\Oauth\Server\ResponseType\RedirectResponse;
 use Preferans\Oauth\Server\RequestType\AuthorizationRequest;
-use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Repositories\AuthCodeRepositoryInterface;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
 use Preferans\Oauth\Server\CodeChallengeVerifiers\CodeChallengeVerifierInterface;
 
@@ -87,7 +87,11 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
 
         // Validate the authorization code
         try {
-            $authCodePayload = json_decode($this->getCrypt()->decrypt($encryptedAuthCode, $this->encryptionKey));
+            $rawCodePayload = $this->getCrypt()->decrypt($encryptedAuthCode, $this->encryptionKey);
+
+            $authCodePayload = json_decode($rawCodePayload);
+            $this->validateAuthCodePayload($authCodePayload);
+
             if (time() > $authCodePayload->expire_time) {
                 throw OAuthServerException::invalidRequest('code', 'Authorization code has expired');
             }
@@ -131,7 +135,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 $client,
                 $authCodePayload->user_id
             );
-        } catch (LogicException  $e) {
+        } catch (LogicException $e) {
             throw OAuthServerException::invalidRequest('code', 'Cannot decrypt the authorization code');
         }
 
@@ -348,5 +352,25 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 ]
             )
         );
+    }
+
+    /**
+     * Validate auth code payload.
+     *
+     * @param $authCodePayload
+     * @throws OAuthServerException
+     */
+    private function validateAuthCodePayload($authCodePayload)
+    {
+        $validCodePayload = isset($authCodePayload->expire_time) &
+            isset($authCodePayload->auth_code_id) &
+            isset($authCodePayload->client_id) &
+            isset($authCodePayload->redirect_uri) &
+            isset($authCodePayload->scopes) && is_array($authCodePayload->scopes) &
+            isset($authCodePayload->user_id);
+
+        if ($validCodePayload === false) {
+            throw OAuthServerException::invalidRequest('code');
+        }
     }
 }

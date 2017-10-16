@@ -50,7 +50,14 @@ class PasswordGrant extends AbstractGrant
     ) {
         // Validate request
         $client = $this->validateClient($request);
-        $scopes = $this->validateScopes($this->getRequestParameter('scope', $request));
+
+        $scopes = [];
+        $requestScopes = $this->getRequestParameter('scope', $request);
+
+        if ($requestScopes !== null) {
+            $scopes = $this->validateScopes($requestScopes);
+        }
+
         $user = $this->validateUser($request, $client);
 
         // Finalize the requested scopes
