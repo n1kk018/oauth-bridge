@@ -105,7 +105,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
 
             // The redirect URI is required in this request
             $redirectUri = $this->getRequestParameter('redirect_uri', $request, null);
-            if (empty($authCodePayload->redirect_uri) === false && $redirectUri === null) {
+            if (!empty($authCodePayload->redirect_uri) && $redirectUri === null) {
                 throw OAuthServerException::invalidRequest('redirect_uri');
             }
 
@@ -142,19 +142,16 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 throw OAuthServerException::invalidRequest('code_verifier');
             }
 
-            if (array_key_exists($authCodePayload->code_challenge_method, $this->codeChallengeVerifiers)) {
+            if (isset($this->codeChallengeVerifiers[$authCodePayload->code_challenge_method])) {
                 $verifier = $this->codeChallengeVerifiers[$authCodePayload->code_challenge_method];
 
                 if (!$verifier->verifyCodeChallenge($codeVerifier, $authCodePayload->code_challenge)) {
                     throw OAuthServerException::invalidGrant('Failed to verify `code_verifier`.');
-                } else {
-                    throw OAuthServerException::serverError(
-                        sprintf(
-                            'Unsupported code challenge method `%s`',
-                            $authCodePayload->code_challenge_method
-                        )
-                    );
                 }
+            } else {
+                throw OAuthServerException::serverError(
+                    sprintf('Unsupported code challenge method `%s`', $authCodePayload->code_challenge_method)
+                );
             }
         }
 
