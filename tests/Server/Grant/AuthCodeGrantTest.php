@@ -7,6 +7,7 @@ use Phalcon\Crypt;
 use Phalcon\Security\Random;
 use PHPUnit\Framework\TestCase;
 use Phalcon\Http\RequestInterface;
+use Preferans\Oauth\Exceptions\OAuthServerException;
 use Preferans\Oauth\Server\CodeChallengeVerifiers\CodeChallengeVerifierInterface;
 use Preferans\Oauth\Server\CodeChallengeVerifiers\S256Verifier;
 use Preferans\Oauth\Tests\Stubs\ScopeEntity;
@@ -230,6 +231,179 @@ class AuthCodeGrantTest extends TestCase
 
         $this->assertTrue($response->getAccessToken() instanceof AccessTokenEntityInterface);
         $this->assertTrue($response->getRefreshToken() instanceof RefreshTokenEntityInterface);
+    }
+
+    /**
+     * @test
+     * @dataProvider codeChallengeProvider
+     * @param string $method
+     * @param string $codeChallenge
+     * @param CodeChallengeVerifierInterface $provider
+     */
+    public function shouldRespondToAccessTokenRequestBadCodeVerifier($method, $codeChallenge, $provider)
+    {
+        $clientRepositoryMock = $this->getClientMock('foo');
+
+        $scopeRepositoryMock = $this->getMockBuilder(ScopeRepositoryInterface::class)->getMock();
+        $scopeEntity = new ScopeEntity();
+        $scopeRepositoryMock->method('getScopeEntityByIdentifier')->willReturn($scopeEntity);
+        $scopeRepositoryMock->method('finalizeScopes')->willReturnArgument(0);
+
+        $accessTokenRepositoryMock = $this->getMockBuilder(AccessTokenRepositoryInterface::class)->getMock();
+        $accessTokenRepositoryMock->method('getNewToken')->willReturn(new AccessTokenEntity());
+        $accessTokenRepositoryMock->method('persistNewAccessToken')->willReturnSelf();
+
+        $refreshTokenRepositoryMock = $this->getMockBuilder(RefreshTokenRepositoryInterface::class)->getMock();
+        $refreshTokenRepositoryMock->method('persistNewRefreshToken')->willReturnSelf();
+        $refreshTokenRepositoryMock->method('getNewRefreshToken')->willReturn(new RefreshTokenEntity());
+
+        $grant = new AuthCodeGrant(
+            $this->getMockBuilder(AuthCodeRepositoryInterface::class)->getMock(),
+            $this->getMockBuilder(RefreshTokenRepositoryInterface::class)->getMock(),
+            new DateInterval('PT10M')
+        );
+
+        $grant->enableCodeChallengeVerifier($provider);
+
+        $crypt = new Crypt();
+
+        $encryptionKey = (new Random)->base64(36);
+        $crypt->setKey($encryptionKey);
+
+        $grant->setClientRepository($clientRepositoryMock);
+        $grant->setScopeRepository($scopeRepositoryMock);
+        $grant->setAccessTokenRepository($accessTokenRepositoryMock);
+        $grant->setRefreshTokenRepository($refreshTokenRepositoryMock);
+        $grant->setEncryptionKey($encryptionKey);
+
+        $requestMock = $this->getRequestMock();
+
+        $requestMock
+            ->method('get')
+            ->withConsecutive(
+                ['client_id' , null, null],
+                ['client_secret' , null, null],
+                ['redirect_uri' , null, null],
+                ['code' , null, null],
+                ['redirect_uri' , null, null],
+                ['code_verifier' , null, null],
+                ['grant_type', null, null]
+            )
+            ->willReturnOnConsecutiveCalls(
+                'foo',
+                null,
+                'http://foo/bar',
+                $crypt->encrypt(json_encode(
+                    [
+                        'auth_code_id'          => uniqid(),
+                        'expire_time'           => time() + 3600,
+                        'client_id'             => 'foo',
+                        'user_id'               => 123,
+                        'scopes'                => ['foo'],
+                        'redirect_uri'          => 'http://foo/bar',
+                        'code_challenge'        => 'foobar',
+                        'code_challenge_method' => $method,
+                    ]
+                )),
+                'http://foo/bar',
+                'none',
+                'authorization_code'
+            );
+
+        try {
+            /** @var ResponseTypeStub $response */
+            $response = $grant->respondToAccessTokenRequest(
+                $requestMock,
+                new ResponseTypeStub(),
+                new DateInterval('PT10M')
+            );
+        } catch (OAuthServerException $e) {
+            $this->assertEquals($e->getHint(), 'Failed to verify `code_verifier`.');
+        }
+    }
+
+    /** @test */
+    public function shouldRespondToAccessTokenRequestMissingCodeVerifier()
+    {
+        $clientRepositoryMock = $this->getClientMock('foo');
+
+        $scopeRepositoryMock = $this->getMockBuilder(ScopeRepositoryInterface::class)->getMock();
+        $scopeEntity = new ScopeEntity();
+        $scopeRepositoryMock->method('getScopeEntityByIdentifier')->willReturn($scopeEntity);
+        $scopeRepositoryMock->method('finalizeScopes')->willReturnArgument(0);
+
+        $accessTokenRepositoryMock = $this->getMockBuilder(AccessTokenRepositoryInterface::class)->getMock();
+        $accessTokenRepositoryMock->method('getNewToken')->willReturn(new AccessTokenEntity());
+        $accessTokenRepositoryMock->method('persistNewAccessToken')->willReturnSelf();
+
+        $refreshTokenRepositoryMock = $this->getMockBuilder(RefreshTokenRepositoryInterface::class)->getMock();
+        $refreshTokenRepositoryMock->method('persistNewRefreshToken')->willReturnSelf();
+        $refreshTokenRepositoryMock->method('getNewRefreshToken')->willReturn(new RefreshTokenEntity());
+
+        $grant = new AuthCodeGrant(
+            $this->getMockBuilder(AuthCodeRepositoryInterface::class)->getMock(),
+            $this->getMockBuilder(RefreshTokenRepositoryInterface::class)->getMock(),
+            new DateInterval('PT10M')
+        );
+
+        $grant->enableCodeChallengeVerifier(new PlainVerifier());
+
+        $crypt = new Crypt();
+
+        $encryptionKey = (new Random)->base64(36);
+        $crypt->setKey($encryptionKey);
+
+        $grant->setClientRepository($clientRepositoryMock);
+        $grant->setScopeRepository($scopeRepositoryMock);
+        $grant->setAccessTokenRepository($accessTokenRepositoryMock);
+        $grant->setRefreshTokenRepository($refreshTokenRepositoryMock);
+        $grant->setEncryptionKey($encryptionKey);
+
+        $requestMock = $this->getRequestMock();
+
+        $requestMock
+            ->method('get')
+            ->withConsecutive(
+                ['client_id' , null, null],
+                ['client_secret' , null, null],
+                ['redirect_uri' , null, null],
+                ['code' , null, null],
+                ['redirect_uri' , null, null],
+                ['code_verifier' , null, null],
+                ['grant_type', null, null]
+            )
+            ->willReturnOnConsecutiveCalls(
+                'foo',
+                null,
+                'http://foo/bar',
+                $crypt->encrypt(json_encode(
+                    [
+                        'auth_code_id'          => uniqid(),
+                        'expire_time'           => time() + 3600,
+                        'client_id'             => 'foo',
+                        'user_id'               => 123,
+                        'scopes'                => ['foo'],
+                        'redirect_uri'          => 'http://foo/bar',
+                        'code_challenge'        => 'foobar',
+                        'code_challenge_method' => 'plain',
+                    ]
+                )),
+                'http://foo/bar',
+                null,
+                'authorization_code'
+            );
+
+        try {
+            /** @var ResponseTypeStub $response */
+            $response = $grant->respondToAccessTokenRequest(
+                $requestMock,
+                new ResponseTypeStub(),
+                new DateInterval('PT10M')
+            );
+        } catch (OAuthServerException $e) {
+            $this->assertEquals($e->getHint(), 'Check the `code_verifier` parameter');
+        }
+
     }
 
     public function codeChallengeProvider()
