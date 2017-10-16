@@ -6,6 +6,8 @@ use DateTime;
 use Phalcon\Http\ResponseInterface;
 use Preferans\Oauth\Entities\AccessTokenEntityInterface;
 use Preferans\Oauth\Entities\RefreshTokenEntityInterface;
+use Preferans\Oauth\Exceptions\IllegalStateException;
+use Preferans\Oauth\Server\CryptKey;
 
 /**
  * Preferans\Oauth\Server\ResponseType\BearerTokenResponse
@@ -16,9 +18,26 @@ class BearerTokenResponse extends AbstractResponseType
 {
     /**
      * {@inheritdoc}
+     *
+     * @param ResponseInterface $response
+     *
+     * @return ResponseInterface
+     * @throws IllegalStateException
      */
     public function generateHttpResponse(ResponseInterface $response)
     {
+        if (!$this->accessToken instanceof AccessTokenEntityInterface) {
+            throw new IllegalStateException(
+                'AccessToken Entity were not set.'
+            );
+        }
+
+        if (!$this->privateKey instanceof CryptKey) {
+            throw new IllegalStateException(
+                'CryptKey were not set.'
+            );
+        }
+
         $expireDateTime = $this->accessToken->getExpiryDateTime()->getTimestamp();
         $jwtAccessToken = $this->accessToken->convertToJWT($this->privateKey);
 

@@ -417,7 +417,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      * @param DateInterval           $authCodeTTL
      * @param ClientEntityInterface  $client
      * @param string                 $userIdentifier
-     * @param string                 $redirectUri
+     * @param string|null            $redirectUri
      * @param ScopeEntityInterface[] $scopes
      *
      * @throws OAuthServerException
@@ -438,7 +438,11 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
         $authCode->setExpiryDateTime((new DateTime())->add($authCodeTTL));
         $authCode->setClient($client);
         $authCode->setUserIdentifier($userIdentifier);
-        $authCode->setRedirectUri($redirectUri);
+
+        if (!empty($redirectUri)) {
+            $authCode->setRedirectUri($redirectUri);
+        }
+
 
         foreach ($scopes as $scope) {
             $authCode->addScope($scope);

@@ -4,6 +4,8 @@ namespace Preferans\Oauth\Server\Grant;
 
 use DateInterval;
 use Phalcon\Http\RequestInterface;
+use Preferans\Oauth\Exceptions\OAuthServerException;
+use Preferans\Oauth\Traits\RequestScopesAwareTrait;
 use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 
 /**
@@ -13,6 +15,8 @@ use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
  */
 class ClientCredentialsGrant extends AbstractGrant
 {
+    use RequestScopesAwareTrait;
+
     /**
      * {@inheritdoc}
      *
@@ -21,6 +25,7 @@ class ClientCredentialsGrant extends AbstractGrant
      * @param DateInterval          $accessTokenTTL
      *
      * @return ResponseTypeInterface
+     * @throws OAuthServerException
      */
     public function respondToAccessTokenRequest(
         RequestInterface $request,
@@ -29,12 +34,8 @@ class ClientCredentialsGrant extends AbstractGrant
     ) {
         // Validate request
         $client = $this->validateClient($request);
-        $scopes = [];
-        $requestedScopes = $this->getRequestParameter('scope', $request);
 
-        if ($requestedScopes !== null) {
-            $scopes = $this->validateScopes($requestedScopes);
-        }
+        $scopes = $this->getScopesFromRequest($request);
 
         // Finalize the requested scopes
         $scopes = $this->scopeRepository->finalizeScopes($scopes, $this->getIdentifier(), $client);

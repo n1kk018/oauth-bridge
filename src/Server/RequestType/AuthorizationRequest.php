@@ -145,7 +145,7 @@ class AuthorizationRequest
      */
     public function isAuthorizationApproved()
     {
-        return $this->authorizationApproved;
+        return  $this->authorizationApproved;
     }
 
     /**
@@ -157,10 +157,26 @@ class AuthorizationRequest
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getRedirectUri()
     {
+        return $this->redirectUri;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinalRedirectUri()
+    {
+        if ($this->redirectUri === null) {
+            if ($this->getClient() && is_array($this->getClient()->getRedirectUri())) {
+                return $this->getClient()->getRedirectUri()[0];
+            }
+
+            return $this->getClient()->getRedirectUri();
+        }
+
         return $this->redirectUri;
     }
 
@@ -173,7 +189,7 @@ class AuthorizationRequest
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getState()
     {
@@ -189,7 +205,7 @@ class AuthorizationRequest
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getCodeChallenge()
     {
@@ -205,7 +221,7 @@ class AuthorizationRequest
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getCodeChallengeMethod()
     {

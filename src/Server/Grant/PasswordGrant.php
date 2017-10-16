@@ -5,11 +5,12 @@ namespace Preferans\Oauth\Server\Grant;
 use DateInterval;
 use Phalcon\Http\RequestInterface;
 use Preferans\Oauth\Server\RequestEvent;
-use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Entities\UserEntityInterface;
 use Preferans\Oauth\Entities\ClientEntityInterface;
+use Preferans\Oauth\Traits\RequestScopesAwareTrait;
 use Preferans\Oauth\Exceptions\OAuthServerException;
 use Preferans\Oauth\Repositories\UserRepositoryInterface;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
 
 /**
@@ -19,6 +20,8 @@ use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
  */
 class PasswordGrant extends AbstractGrant
 {
+    use RequestScopesAwareTrait;
+
     /**
      * Create a new password grant.
      *
@@ -42,6 +45,7 @@ class PasswordGrant extends AbstractGrant
      * @param DateInterval          $accessTokenTTL
      *
      * @return ResponseTypeInterface
+     * @throws OAuthServerException
      */
     public function respondToAccessTokenRequest(
         RequestInterface $request,
@@ -51,12 +55,7 @@ class PasswordGrant extends AbstractGrant
         // Validate request
         $client = $this->validateClient($request);
 
-        $scopes = [];
-        $requestScopes = $this->getRequestParameter('scope', $request);
-
-        if ($requestScopes !== null) {
-            $scopes = $this->validateScopes($requestScopes);
-        }
+        $scopes = $this->getScopesFromRequest($request);
 
         $user = $this->validateUser($request, $client);
 

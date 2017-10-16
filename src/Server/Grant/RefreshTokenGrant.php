@@ -3,11 +3,12 @@
 namespace Preferans\Oauth\Server\Grant;
 
 use DateInterval;
-use Preferans\Oauth\Exceptions\OAuthServerException;
 use Phalcon\Http\RequestInterface;
 use Preferans\Oauth\Server\RequestEvent;
-use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Entities\ScopeEntityInterface;
+use Preferans\Oauth\Traits\RequestScopesAwareTrait;
+use Preferans\Oauth\Exceptions\OAuthServerException;
+use Preferans\Oauth\Server\ResponseType\ResponseTypeInterface;
 use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
 
 /**
@@ -17,6 +18,8 @@ use Preferans\Oauth\Repositories\RefreshTokenRepositoryInterface;
  */
 class RefreshTokenGrant extends AbstractGrant
 {
+    use RequestScopesAwareTrait;
+
     /**
      * RefreshTokenGrant constructor.
      *
@@ -47,13 +50,9 @@ class RefreshTokenGrant extends AbstractGrant
         // Validate request
         $client = $this->validateClient($request);
 
-        $requestedScopes = $this->getRequestParameter('scope', $request);
         $oldRefreshToken = $this->validateOldRefreshToken($request, $client->getIdentifier());
 
-        $scopes = [];
-        if ($requestedScopes !== null) {
-            $scopes = $this->validateScopes($requestedScopes);
-        }
+        $scopes = $this->getScopesFromRequest($request);
 
         // If no new scopes are requested then give the access token the original session scopes
         if (!count($scopes)) {

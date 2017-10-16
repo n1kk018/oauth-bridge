@@ -9,6 +9,7 @@ use Phalcon\Http\RequestInterface;
 use Preferans\Oauth\Server\RequestEvent;
 use Preferans\Oauth\Entities\UserEntityInterface;
 use Preferans\Oauth\Entities\ScopeEntityInterface;
+use Preferans\Oauth\Traits\RequestScopesAwareTrait;
 use Preferans\Oauth\Entities\ClientEntityInterface;
 use Preferans\Oauth\Exceptions\OAuthServerException;
 use Preferans\Oauth\Server\ResponseType\RedirectResponse;
@@ -25,6 +26,8 @@ use Preferans\Oauth\Server\CodeChallengeVerifiers\CodeChallengeVerifierInterface
  */
 class AuthCodeGrant extends AbstractAuthorizeGrant
 {
+    use RequestScopesAwareTrait;
+
     /**
      * @var DateInterval
      */
@@ -122,7 +125,9 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 $scope = $this->scopeRepository->getScopeEntityByIdentifier($scopeId);
 
                 if (!$scope instanceof ScopeEntityInterface) {
+                    // @codeCoverageIgnoreStart
                     throw OAuthServerException::invalidScope($scopeId);
+                    // @codeCoverageIgnoreEnd
                 }
 
                 $scopes[] = $scope;
@@ -153,9 +158,11 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                     throw OAuthServerException::invalidGrant('Failed to verify `code_verifier`.');
                 }
             } else {
+                // @codeCoverageIgnoreStart
                 throw OAuthServerException::serverError(
                     sprintf('Unsupported code challenge method `%s`', $authCodePayload->code_challenge_method)
                 );
+                // @codeCoverageIgnoreEnd
             }
         }
 
@@ -240,19 +247,23 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
             $client->getRedirectUri()[0] :
             $client->getRedirectUri();
 
-        $scopes = $this->validateScopes(
-            $this->getQueryStringParameter('scope', $request),
-            $defaultRedirectUri
-        );
+        $scopes = $this->getScopesFromRequest($request, true, $defaultRedirectUri);
 
         $stateParameter = $this->getQueryStringParameter('state', $request);
 
         $authorizationRequest = new AuthorizationRequest();
         $authorizationRequest->setGrantTypeId($this->getIdentifier());
         $authorizationRequest->setClient($client);
-        $authorizationRequest->setRedirectUri($redirectUri);
-        $authorizationRequest->setState($stateParameter);
+
         $authorizationRequest->setScopes($scopes);
+
+        if ($redirectUri !== null) {
+            $authorizationRequest->setRedirectUri($redirectUri);
+        }
+
+        if ($stateParameter !== null) {
+            $authorizationRequest->setState($stateParameter);
+        }
 
         if (!empty($this->codeChallengeVerifiers)) {
             $codeChallenge = $this->getQueryStringParameter('code_challenge', $request);
@@ -281,7 +292,10 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
             }
 
             $authorizationRequest->setCodeChallenge($codeChallenge);
-            $authorizationRequest->setCodeChallengeMethod($codeChallengeMethod);
+
+            if (!empty($codeChallengeMethod)) {
+                $authorizationRequest->setCodeChallengeMethod($codeChallengeMethod);
+            }
         }
 
         return $authorizationRequest;
@@ -301,11 +315,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
             throw new LogicException('An instance of UserEntityInterface should be set on the AuthorizationRequest');
         }
 
-        $finalRedirectUri = ($authorizationRequest->getRedirectUri() === null)
-            ? is_array($authorizationRequest->getClient()->getRedirectUri())
-                ? $authorizationRequest->getClient()->getRedirectUri()[0]
-                : $authorizationRequest->getClient()->getRedirectUri()
-            : $authorizationRequest->getRedirectUri();
+        $finalRedirectUri = $authorizationRequest->getFinalRedirectUri();
 
         // The user approved the client, redirect them back with an auth code
         if ($authorizationRequest->isAuthorizationApproved() === true) {
@@ -362,7 +372,8 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
      */
     private function validateAuthCodePayload($authCodePayload)
     {
-        $validCodePayload = isset($authCodePayload->expire_time) &
+        $validCodePayload =
+            isset($authCodePayload->expire_time) &
             isset($authCodePayload->auth_code_id) &
             isset($authCodePayload->client_id) &
             isset($authCodePayload->redirect_uri) &
