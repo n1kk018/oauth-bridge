@@ -239,22 +239,20 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      *
      * @param RequestInterface $request
      *
-     * @throws OAuthServerException
-     *
      * @return ClientEntityInterface
+     * @throws OAuthServerException
      */
     protected function validateClient(RequestInterface $request)
     {
         list($basicAuthUser, $basicAuthPassword) = $this->getBasicAuthCredentials($request);
 
         $clientId = $this->getRequestParameter('client_id', $request, $basicAuthUser);
-        if (is_null($clientId)) {
+        if ($clientId === null) {
             throw OAuthServerException::invalidRequest('client_id');
         }
 
         // If the client is confidential require the client secret
         $clientSecret = $this->getRequestParameter('client_secret', $request, $basicAuthPassword);
-
         $client = $this->clientRepository->getClientEntity($clientId, $this->getIdentifier(), $clientSecret);
 
         if (!$client instanceof ClientEntityInterface) {
@@ -265,10 +263,9 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
 
         // If a redirect URI is provided ensure it matches what is pre-registered
         $redirectUri = $this->getRequestParameter('redirect_uri', $request);
+
         if ($redirectUri !== null) {
-            if (is_string($client->getRedirectUri())
-                && (strcmp($client->getRedirectUri(), $redirectUri) !== 0)
-            ) {
+            if (is_string($client->getRedirectUri()) && (strcmp($client->getRedirectUri(), $redirectUri) !== 0)) {
                 $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
             } elseif (is_array($client->getRedirectUri())
