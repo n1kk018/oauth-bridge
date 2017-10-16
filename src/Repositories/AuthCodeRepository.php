@@ -67,7 +67,7 @@ class AuthCodeRepository extends AbstractRepository implements AuthCodeRepositor
             ]
         );
 
-        $refreshToken->scopes = $scopes;
+        $refreshToken->{'scopes'} = $scopes;
         $refreshToken->save();
     }
 

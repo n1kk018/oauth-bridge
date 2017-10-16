@@ -1,3 +1,0 @@
-parameters:
-    ignoreErrors:
-        - '#undefined property Phalcon\\Mvc\\ModelInterface::#'

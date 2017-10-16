@@ -83,7 +83,7 @@ class AccessTokenRepository extends AbstractRepository implements AccessTokenRep
             ]
         );
 
-        $accessToken->scopes = $scopes;
+        $accessToken->{'scopes'} = $scopes;
         $accessToken->save();
     }
 
