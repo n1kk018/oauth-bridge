@@ -117,6 +117,20 @@ CREATE TABLE `user_scopes` (
   KEY `scope_id` (`scope_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+# Dump of table user_clients
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `user_clients`;
+
+CREATE TABLE `user_clients` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NOT NULL,
+    `client_id` varchar(100) NOT NULL,
+    PRIMARY KEY (`id`),
+    KEY `user_id` (`user_id`),
+    KEY `client_id` (`client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 # Dump of table access_tokens
 # ------------------------------------------------------------
 
