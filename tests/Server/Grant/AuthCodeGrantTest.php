@@ -7,6 +7,8 @@ use Phalcon\Crypt;
 use Phalcon\Security\Random;
 use PHPUnit\Framework\TestCase;
 use Phalcon\Http\RequestInterface;
+use Preferans\Oauth\Server\CodeChallengeVerifiers\CodeChallengeVerifierInterface;
+use Preferans\Oauth\Server\CodeChallengeVerifiers\S256Verifier;
 use Preferans\Oauth\Tests\Stubs\ScopeEntity;
 use Preferans\Oauth\Tests\Stubs\ClientEntity;
 use Preferans\Oauth\Server\Grant\AuthCodeGrant;
@@ -142,8 +144,14 @@ class AuthCodeGrantTest extends TestCase
         $grant->validateAuthorizationRequest($requestMock);
     }
 
-    /** @test */
-    public function shouldRespondToAccessTokenRequestCodeChallengePlain()
+    /**
+     * @test
+     * @dataProvider codeChallengeProvider
+     * @param string $method
+     * @param string $codeChallenge
+     * @param CodeChallengeVerifierInterface $provider
+     */
+    public function shouldRespondToAccessTokenRequestCodeChallenge($method, $codeChallenge, $provider)
     {
         $clientRepositoryMock = $this->getClientMock('foo');
 
@@ -166,7 +174,7 @@ class AuthCodeGrantTest extends TestCase
             new DateInterval('PT10M')
         );
 
-        $grant->enableCodeChallengeVerifier(new PlainVerifier());
+        $grant->enableCodeChallengeVerifier($provider);
 
         $crypt = new Crypt();
 
@@ -204,8 +212,8 @@ class AuthCodeGrantTest extends TestCase
                         'user_id'               => 123,
                         'scopes'                => ['foo'],
                         'redirect_uri'          => 'http://foo/bar',
-                        'code_challenge'        => 'foobar',
-                        'code_challenge_method' => 'plain',
+                        'code_challenge'        => $codeChallenge,
+                        'code_challenge_method' => $method,
                     ]
                 )),
                 'http://foo/bar',
@@ -222,6 +230,14 @@ class AuthCodeGrantTest extends TestCase
 
         $this->assertTrue($response->getAccessToken() instanceof AccessTokenEntityInterface);
         $this->assertTrue($response->getRefreshToken() instanceof RefreshTokenEntityInterface);
+    }
+
+    public function codeChallengeProvider()
+    {
+        return [
+            ['plain', 'foobar', new PlainVerifier()],
+            ['S256', urlencode(base64_encode(hash('sha256', 'foobar'))), new S256Verifier()],
+        ];
     }
 
     protected function getRequestMock(array $methods = [])
