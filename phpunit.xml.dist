@@ -22,8 +22,11 @@
 >
 
     <testsuites>
-        <testsuite name="General Test Suite">
-            <directory suffix=".php">tests</directory>
+        <testsuite name="Server">
+            <directory suffix=".php">tests/Server</directory>
+        </testsuite>
+        <testsuite name="Exceptions">
+            <directory suffix=".php">tests/Exceptions</directory>
         </testsuite>
     </testsuites>
 
