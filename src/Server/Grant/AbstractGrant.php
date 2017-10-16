@@ -159,7 +159,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
      * Validate scopes in the request.
      *
      * @param string $scopes
-     * @param string $redirectUri
+     * @param string|null $redirectUri
      *
      * @throws OAuthServerException
      *
