@@ -29,8 +29,8 @@ class RequestAttributes implements RequestAttributesInterface
     /**
      * {@inheritdoc}
      *
-     * @param string $name The attribute name.
-     * @param mixed $default Default value to return if the attribute does not exist.
+     * @param string $name    The attribute name.
+     * @param mixed  $default Default value to return if the attribute does not exist.
      *
      * @return mixed
      */
@@ -46,8 +46,8 @@ class RequestAttributes implements RequestAttributesInterface
     /**
      * {@inheritdoc}
      *
-     * @param string $name The attribute name.
-     * @param mixed $value The value of the attribute.
+     * @param string $name  The attribute name.
+     * @param mixed  $value The value of the attribute.
      *
      * @return static
      */

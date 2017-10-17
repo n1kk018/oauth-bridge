@@ -19,8 +19,8 @@ interface RequestAttributesInterface
     /**
      * Retrieve a single derived request attribute.
      *
-     * @param string $name The attribute name.
-     * @param mixed $default Default value to return if the attribute does not exist.
+     * @param string $name    The attribute name.
+     * @param mixed  $default Default value to return if the attribute does not exist.
      *
      * @return mixed
      */
@@ -29,8 +29,8 @@ interface RequestAttributesInterface
     /**
      * Return an instance with the specified derived request attribute.
      *
-     * @param string $name The attribute name.
-     * @param mixed $value The value of the attribute.
+     * @param string $name  The attribute name.
+     * @param mixed  $value The value of the attribute.
      *
      * @return static
      */
