@@ -95,6 +95,9 @@ class BearerTokenValidator implements AuthorizationValidatorInterface
                 throw OAuthServerException::accessDenied('Access token has been revoked');
             }
 
+            // Since Phalcon's Request is immutable we can safely create a new instance here.
+            // But in fact, it is recommended to use the AttributesAwareRequestInterface in your
+            // applications to achieve maximum performance.
             if (!$request instanceof AttributesAwareRequestInterface) {
                 $request = new AttributesAwareRequest();
             }
