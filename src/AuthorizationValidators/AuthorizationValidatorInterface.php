@@ -3,6 +3,7 @@
 namespace Preferans\Oauth\AuthorizationValidators;
 
 use Phalcon\Http\RequestInterface;
+use Preferans\Oauth\Http\AttributesAwareRequestInterface;
 
 /**
  * Preferans\Oauth\AuthorizationValidators\AuthorizationValidatorInterface
@@ -17,7 +18,7 @@ interface AuthorizationValidatorInterface
      *
      * @param RequestInterface $request
      *
-     * @return RequestInterface
+     * @return AttributesAwareRequestInterface
      */
     public function validateAuthorization(RequestInterface $request);
 }

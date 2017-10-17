@@ -59,7 +59,7 @@ class BearerTokenValidator implements AuthorizationValidatorInterface
      *
      * @param RequestInterface $request
      *
-     * @return RequestInterface
+     * @return AttributesAwareRequestInterface
      * @throws OAuthServerException
      */
     public function validateAuthorization(RequestInterface $request)
