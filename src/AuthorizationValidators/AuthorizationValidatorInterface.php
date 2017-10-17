@@ -3,14 +3,15 @@
 namespace Preferans\Oauth\AuthorizationValidators;
 
 use Phalcon\Http\RequestInterface;
-use Preferans\Oauth\Http\AttributesAwareRequestInterface;
+use Phalcon\Di\InjectionAwareInterface;
+use Phalcon\Events\EventsAwareInterface;
 
 /**
  * Preferans\Oauth\AuthorizationValidators\AuthorizationValidatorInterface
  *
  * @package Preferans\Oauth\AuthorizationValidators
  */
-interface AuthorizationValidatorInterface
+interface AuthorizationValidatorInterface extends InjectionAwareInterface, EventsAwareInterface
 {
     /**
      * Determine the access token in the authorization header
@@ -18,7 +19,7 @@ interface AuthorizationValidatorInterface
      *
      * @param RequestInterface $request
      *
-     * @return AttributesAwareRequestInterface
+     * @return RequestInterface
      */
     public function validateAuthorization(RequestInterface $request);
 }

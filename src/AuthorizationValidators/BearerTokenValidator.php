@@ -5,14 +5,14 @@ namespace Preferans\Oauth\AuthorizationValidators;
 use RuntimeException;
 use Lcobucci\JWT\Parser;
 use InvalidArgumentException;
+use Phalcon\Mvc\User\Component;
 use Lcobucci\JWT\ValidationData;
 use Phalcon\Http\RequestInterface;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Preferans\Oauth\Server\CryptKey;
 use Preferans\Oauth\Traits\CryptAwareTrait;
-use Preferans\Oauth\Http\AttributesAwareRequest;
+use Preferans\Oauth\Http\RequestAttributes;
 use Preferans\Oauth\Exceptions\OAuthServerException;
-use Preferans\Oauth\Http\AttributesAwareRequestInterface;
 use Preferans\Oauth\Repositories\AccessTokenRepositoryInterface;
 
 /**
@@ -20,7 +20,7 @@ use Preferans\Oauth\Repositories\AccessTokenRepositoryInterface;
  *
  * @package Preferans\Oauth\AuthorizationValidators
  */
-class BearerTokenValidator implements AuthorizationValidatorInterface
+class BearerTokenValidator extends Component implements AuthorizationValidatorInterface
 {
     use CryptAwareTrait;
 
@@ -59,7 +59,7 @@ class BearerTokenValidator implements AuthorizationValidatorInterface
      *
      * @param RequestInterface $request
      *
-     * @return AttributesAwareRequestInterface
+     * @return RequestInterface
      * @throws OAuthServerException
      */
     public function validateAuthorization(RequestInterface $request)
@@ -95,19 +95,23 @@ class BearerTokenValidator implements AuthorizationValidatorInterface
                 throw OAuthServerException::accessDenied('Access token has been revoked');
             }
 
-            // Since Phalcon's Request is immutable we can safely create a new instance here.
-            // But in fact, it is recommended to use the AttributesAwareRequestInterface in your
-            // applications to achieve maximum performance.
-            if (!$request instanceof AttributesAwareRequestInterface) {
-                $request = new AttributesAwareRequest();
-            }
+            // Since Phalcon's Request is immutable we can't just modify it here.
+            // Thus we set request attributes to the DI.
+            $this->getDI()->setShared(
+                'requestAttributes',
+                function () use ($token) {
+                    $attributes = new RequestAttributes();
 
-            // Return the request with additional attributes
-            return $request
-                ->setAttribute('oauth_access_token_id', $token->getClaim('jti'))
-                ->setAttribute('oauth_client_id', $token->getClaim('aud'))
-                ->setAttribute('oauth_user_id', $token->getClaim('sub'))
-                ->setAttribute('oauth_scopes', $token->getClaim('scopes'));
+                    $attributes->setAttribute('oauth_access_token_id', $token->getClaim('jti'));
+                    $attributes->setAttribute('oauth_client_id', $token->getClaim('aud'));
+                    $attributes->setAttribute('oauth_user_id', $token->getClaim('sub'));
+                    $attributes->setAttribute('oauth_scopes', $token->getClaim('scopes'));
+
+                    return $attributes;
+                }
+            );
+
+            return $request;
         } catch (InvalidArgumentException $exception) {
             // JWT couldn't be parsed so return the request as is
             throw OAuthServerException::accessDenied($exception->getMessage());

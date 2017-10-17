@@ -3,11 +3,11 @@
 namespace Preferans\Oauth\Http;
 
 /**
- * Preferans\Oauth\Http\AttributesAwareRequestInterface
+ * Preferans\Oauth\Http\RequestAttributesInterface
  *
  * @package Preferans\Oauth\Http
  */
-interface AttributesAwareRequestInterface
+interface RequestAttributesInterface
 {
     /**
      * Retrieve attributes derived from the request.

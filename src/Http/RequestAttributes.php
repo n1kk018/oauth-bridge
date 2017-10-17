@@ -5,11 +5,11 @@ namespace Preferans\Oauth\Http;
 use Phalcon\Http\Request;
 
 /**
- * Preferans\Oauth\Http\AttributesAwareRequest
+ * Preferans\Oauth\Http\RequestAttributes
  *
  * @package Preferans\Oauth\Http
  */
-class AttributesAwareRequest extends Request implements AttributesAwareRequestInterface
+class RequestAttributes implements RequestAttributesInterface
 {
     /**
      * @var array
