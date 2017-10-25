@@ -343,7 +343,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 $this->makeRedirectUri(
                     $finalRedirectUri,
                     [
-                        'code'  => $this->getCrypt()->encrypt(json_encode($payload), $this->encryptionKey),
+                        'code'  => $this->getCrypt()->encryptBase64(json_encode($payload), $this->encryptionKey),
                         'state' => $authorizationRequest->getState(),
                     ]
                 )
