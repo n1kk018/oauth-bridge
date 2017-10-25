@@ -4,10 +4,11 @@ namespace Preferans\Oauth\Server\ResponseType;
 
 use DateTime;
 use Phalcon\Http\ResponseInterface;
+use Preferans\Oauth\Server\CryptKey;
+use Preferans\Oauth\Entities\ScopeEntityInterface;
+use Preferans\Oauth\Exceptions\IllegalStateException;
 use Preferans\Oauth\Entities\AccessTokenEntityInterface;
 use Preferans\Oauth\Entities\RefreshTokenEntityInterface;
-use Preferans\Oauth\Exceptions\IllegalStateException;
-use Preferans\Oauth\Server\CryptKey;
 
 /**
  * Preferans\Oauth\Server\ResponseType\BearerTokenResponse
@@ -41,10 +42,15 @@ class BearerTokenResponse extends AbstractResponseType
         $expireDateTime = $this->accessToken->getExpiryDateTime()->getTimestamp();
         $jwtAccessToken = $this->accessToken->convertToJWT($this->privateKey);
 
+        $scopes = array_map(function (ScopeEntityInterface $scopeEntity) {
+            return $scopeEntity->getIdentifier();
+        }, $this->accessToken->getScopes());
+
         $responseParams = [
             'token_type'   => 'Bearer',
             'expires_in'   => $expireDateTime - (new DateTime())->getTimestamp(),
             'access_token' => (string) $jwtAccessToken,
+            'scope'        => implode(' ', $scopes),
         ];
 
         if ($this->refreshToken instanceof RefreshTokenEntityInterface) {
