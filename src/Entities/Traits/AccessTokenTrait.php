@@ -2,10 +2,10 @@
 
 namespace Preferans\Oauth\Entities\Traits;
 
+use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Token;
 use Preferans\Oauth\Server\CryptKey;
 use Preferans\Oauth\Entities\ClientEntityInterface;
 use Preferans\Oauth\Entities\ScopeEntityInterface;
@@ -26,7 +26,9 @@ trait AccessTokenTrait
      */
     public function convertToJWT(CryptKey $privateKey)
     {
-        return (new Builder())
+        $builder = new Builder();
+
+        $builder
             ->setAudience($this->getClient()->getIdentifier())
             ->setId($this->getIdentifier(), true)
             ->setIssuedAt(time())
@@ -34,8 +36,9 @@ trait AccessTokenTrait
             ->setExpiration($this->getExpiryDateTime()->getTimestamp())
             ->setSubject($this->getUserIdentifier())
             ->set('scopes', $this->getScopes())
-            ->sign(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()))
-            ->getToken();
+            ->sign(new Sha256(), new Key($privateKey->getKeyPath(), $privateKey->getPassPhrase()));
+
+        return $builder->getToken();
     }
 
     /**

@@ -402,13 +402,15 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
             try {
                 $this->accessTokenRepository->persistNewAccessToken($accessToken);
 
-                return $accessToken;
+                break;
             } catch (UniqueTokenIdentifierConstraintViolationException $e) {
                 if ($maxGenerationAttempts === 0) {
                     throw $e;
                 }
             }
         }
+
+        return $accessToken;
     }
 
     /**
@@ -453,13 +455,15 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
             try {
                 $this->authCodeRepository->persistNewAuthCode($authCode);
 
-                return $authCode;
+                break;
             } catch (UniqueTokenIdentifierConstraintViolationException $e) {
                 if ($maxGenerationAttempts === 0) {
                     throw $e;
                 }
             }
         }
+
+        return $authCode;
     }
 
     /**
@@ -483,13 +487,15 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
             try {
                 $this->refreshTokenRepository->persistNewRefreshToken($refreshToken);
 
-                return $refreshToken;
+                break;
             } catch (UniqueTokenIdentifierConstraintViolationException $e) {
                 if ($maxGenerationAttempts === 0) {
                     throw $e;
                 }
             }
         }
+
+        return $refreshToken;
     }
 
     /**

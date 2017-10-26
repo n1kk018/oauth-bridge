@@ -2,8 +2,6 @@
 
 namespace Preferans\Oauth\Http;
 
-use Phalcon\Http\Request;
-
 /**
  * Preferans\Oauth\Http\RequestAttributes
  *
