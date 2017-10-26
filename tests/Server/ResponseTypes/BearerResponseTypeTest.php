@@ -20,10 +20,77 @@ class BearerResponseTypeTest extends TestCase
 {
     use KeysAwareTrait;
 
-    /** @test */
-    public function shouldGenerateHttpResponse()
+    /**
+     * @test
+     * @param string $className
+     * @dataProvider providerBearerTokenResponse
+     */
+    public function shouldGenerateHttpResponse($className)
+    {
+        $responseType = $this->createBearerTokenResponse($className);
+
+        $response = $responseType->generateHttpResponse(new Response());
+
+        $this->assertEquals('200 OK', $response->getHeaders()->get('Status'));
+        $this->assertEquals('no-cache', $response->getHeaders()->get('pragma'));
+        $this->assertEquals('no-store', $response->getHeaders()->get('cache-control'));
+        $this->assertEquals('application/json; charset=UTF-8', $response->getHeaders()->get('Content-Type'));
+
+        $json = json_decode($response->getContent());
+
+        $this->assertEquals('Bearer', $json->token_type);
+        $this->assertTrue(isset($json->expires_in));
+        $this->assertTrue(isset($json->access_token));
+        $this->assertTrue(isset($json->refresh_token));
+        $this->assertTrue(isset($json->scope));
+        $this->assertEquals('basic1 basic2', $json->scope);
+
+        if ($className === BearerTokenResponseWithParams::class) {
+            $this->assertTrue(isset($json->foo));
+            $this->assertEquals('bar', $json->foo);
+        }
+    }
+
+    /**
+     * @test
+     * @expectedException \Preferans\Oauth\Exceptions\IllegalStateException
+     * @expectedExceptionMessage AccessToken Entity were not set.
+     */
+    public function shouldThrowIllegalStateExceptionInCaseOfAbsenceAccessTokenEntity()
     {
         $responseType = new BearerTokenResponse();
+        $responseType->setPrivateKey(new CryptKey($this->privateKey));
+        $responseType->generateHttpResponse(new Response());
+    }
+
+    /**
+     * @test
+     * @expectedException \Preferans\Oauth\Exceptions\IllegalStateException
+     * @expectedExceptionMessage CryptKey were not set.
+     */
+    public function shouldThrowIllegalStateExceptionInCaseOfAbsencePrivateKey()
+    {
+        $responseType = new BearerTokenResponse();
+        $responseType->setAccessToken(new AccessTokenEntity('abcdef'));
+        $responseType->generateHttpResponse(new Response());
+    }
+
+    public function providerBearerTokenResponse()
+    {
+        return [
+            [BearerTokenResponse::class],
+            [BearerTokenResponseWithParams::class],
+        ];
+    }
+
+    /**
+     * @param string $class
+     * @return BearerTokenResponse
+     */
+    protected function createBearerTokenResponse($class)
+    {
+        /** @var BearerTokenResponse $responseType */
+        $responseType = new $class();
         $responseType->setPrivateKey(new CryptKey($this->privateKey));
 
         $crypt = new Crypt();
@@ -45,20 +112,6 @@ class BearerResponseTypeTest extends TestCase
         $responseType->setAccessToken($accessToken);
         $responseType->setRefreshToken($refreshToken);
 
-        $response = $responseType->generateHttpResponse(new Response());
-
-        $this->assertEquals('200 OK', $response->getHeaders()->get('Status'));
-        $this->assertEquals('no-cache', $response->getHeaders()->get('pragma'));
-        $this->assertEquals('no-store', $response->getHeaders()->get('cache-control'));
-        $this->assertEquals('application/json; charset=UTF-8', $response->getHeaders()->get('Content-Type'));
-
-        $json = json_decode($response->getContent());
-
-        $this->assertEquals('Bearer', $json->token_type);
-        $this->assertTrue(isset($json->expires_in));
-        $this->assertTrue(isset($json->access_token));
-        $this->assertTrue(isset($json->refresh_token));
-        $this->assertTrue(isset($json->scope));
-        $this->assertEquals('basic1 basic2', $json->scope);
+        return $responseType;
     }
 }
