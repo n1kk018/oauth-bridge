@@ -65,11 +65,5 @@
         "psr-4": {
             "Preferans\\Oauth\\Tests\\": "tests/"
         }
-    },
-    "scripts": {
-        "phpstan": "vendor/bin/phpstan analyse -l max src",
-        "phpcs": "vendor/bin/phpcs",
-        "phpunit": "vendor/bin/phpunit --disallow-test-output",
-        "humbug": "vendor/bin/humbug"
     }
 }

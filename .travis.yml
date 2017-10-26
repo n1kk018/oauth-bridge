@@ -32,10 +32,11 @@ install:
   - $(phpenv which php) --ri phalcon
 
 script:
-  - composer phpcs
-  - composer phpstan
-  - composer phpunit
-  - composer humbug
+  - vendor/bin/phpstan analyse -l max src
+  - vendor/bin/phpcs
+  - vendor/bin/phpunit --disallow-test-output
+  - vendor/bin/humbug
+  - vendor/bin/humbug stats
 
 notifications:
   email:
