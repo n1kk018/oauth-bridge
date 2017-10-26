@@ -479,9 +479,8 @@ class AuthCodeGrantTest extends TestCase
 
     protected function getClientMock($identifier = null)
     {
-        $client = new ClientEntity();
+        $client = new ClientEntity($identifier);
         $client->setRedirectUri('http://foo/bar');
-        $client->setIdentifier($identifier);
 
         $clientRepositoryMock = $this->getMockBuilder(ClientRepositoryInterface::class)->getMock();
         $clientRepositoryMock->method('getClientEntity')->willReturn($client);

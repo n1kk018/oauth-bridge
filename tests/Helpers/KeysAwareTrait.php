@@ -9,7 +9,7 @@ trait KeysAwareTrait
 
     protected function setUp()
     {
-        $this->privateKey = __DIR__ . '/../_data/public.key';
+        $this->privateKey = __DIR__ . '/../_data/private.key';
         $this->publicKey = __DIR__ . '/../_data/public.key';
 
         chmod($this->privateKey, 0600);
