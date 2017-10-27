@@ -31,13 +31,19 @@ class ImplicitGrant extends AbstractAuthorizeGrant
     private $accessTokenTTL;
 
     /**
+     * @var string
+     */
+    private $queryDelimiter;
+
+    /**
      * {@inheritdoc}
      *
      * @param DateInterval $accessTokenTTL
      */
-    public function __construct(DateInterval $accessTokenTTL)
+    public function __construct(DateInterval $accessTokenTTL, string $queryDelimiter = '#')
     {
         $this->accessTokenTTL = $accessTokenTTL;
+        $this->queryDelimiter = $queryDelimiter;
     }
 
     /**
@@ -224,7 +230,7 @@ class ImplicitGrant extends AbstractAuthorizeGrant
                         'expires_in'   => $expiresIn,
                         'state'        => $authorizationRequest->getState(),
                     ],
-                    '#'
+                    $this->queryDelimiter
                 )
             );
 
