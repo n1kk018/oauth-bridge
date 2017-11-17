@@ -54,13 +54,12 @@ class PasswordGrant extends AbstractGrant
     ) {
         // Validate request
         $client = $this->validateClient($request);
-
-        $scopes = $this->getScopesFromRequest($request);
+        $scopes = $this->getScopesFromRequest($request, false, null, $this->defaultScope);
 
         $user = $this->validateUser($request, $client);
 
         // Finalize the requested scopes
-        $scopes = $this->scopeRepository->finalizeScopes(
+        $finalizedScopes = $this->scopeRepository->finalizeScopes(
             $scopes,
             $this->getIdentifier(),
             $client,
@@ -68,7 +67,7 @@ class PasswordGrant extends AbstractGrant
         );
 
         // Issue and persist new tokens
-        $accessToken = $this->issueAccessToken($accessTokenTTL, $client, $user->getIdentifier(), $scopes);
+        $accessToken = $this->issueAccessToken($accessTokenTTL, $client, $user->getIdentifier(), $finalizedScopes);
         $refreshToken = $this->issueRefreshToken($accessToken);
 
         // Inject tokens into response

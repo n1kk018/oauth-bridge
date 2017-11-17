@@ -16,21 +16,26 @@ trait RequestScopesAwareTrait
     /**
      * Gets and validate scopes in the request.
      *
-     * @param RequestInterface $request
-     * @param bool $fromQueryString
+     * @param RequestInterface     $request
+     * @param bool                 $fromQueryString
      * @param string|string[]|null $redirectUri
+     * @param mixed                $default
      *
      * @throws OAuthServerException
      *
      * @return ScopeEntityInterface[]
      */
-    public function getScopesFromRequest($request, $fromQueryString = false, $redirectUri = null): array
-    {
+    public function getScopesFromRequest(
+        RequestInterface $request,
+        $fromQueryString = false,
+        $redirectUri = null,
+        $default = null
+    ): array {
         $scopes = [];
 
         $requestScopes = $fromQueryString ?
-            $this->getQueryStringParameter('scope', $request):
-            $this->getRequestParameter('scope', $request);
+            $this->getQueryStringParameter('scope', $request, $default) :
+            $this->getRequestParameter('scope', $request, $default);
 
         if ($redirectUri !== null) {
             $redirectUri = is_array($redirectUri) ? $redirectUri[0] : $redirectUri;

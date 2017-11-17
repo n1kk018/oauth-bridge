@@ -23,6 +23,7 @@ trait EventsAwareTrait
      * Sets the events manager.
      *
      * @param ManagerInterface $eventsManager
+     * @return void
      */
     public function setEventsManager(ManagerInterface $eventsManager)
     {
@@ -34,7 +35,7 @@ trait EventsAwareTrait
      *
      * @return ManagerInterface
      */
-    public function getEventsManager()
+    public function getEventsManager(): ManagerInterface
     {
         if (!$this->eventsManager) {
             $this->eventsManager = new Manager();

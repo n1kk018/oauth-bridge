@@ -49,10 +49,17 @@ class RefreshTokenGrant extends AbstractGrant
     ) {
         // Validate request
         $client = $this->validateClient($request);
-
         $oldRefreshToken = $this->validateOldRefreshToken($request, $client->getIdentifier());
 
-        $scopes = $this->getScopesFromRequest($request);
+        $scopes = $this->getScopesFromRequest($request, false, null, $oldRefreshToken['scopes']);
+
+        // The OAuth spec says that a refreshed access token can have the original scopes
+        // or fewer so ensure the request doesn't include any new scopes
+        foreach ($scopes as $scope) {
+            if (!in_array($scope->getIdentifier(), $oldRefreshToken['scopes'])) {
+                throw OAuthServerException::invalidScope($scope->getIdentifier());
+            }
+        }
 
         // If no new scopes are requested then give the access token the original session scopes
         if (!count($scopes)) {
@@ -114,7 +121,7 @@ class RefreshTokenGrant extends AbstractGrant
 
         $refreshTokenData = json_decode($refreshToken, true);
         if ($refreshTokenData['client_id'] !== $clientId) {
-            $$this->getEventsManager()->fire(RequestEvent::REFRESH_TOKEN_CLIENT_FAILED, $request);
+            $this->getEventsManager()->fire(RequestEvent::REFRESH_TOKEN_CLIENT_FAILED, $request);
             throw OAuthServerException::invalidRefreshToken('Token is not linked to client');
         }
 

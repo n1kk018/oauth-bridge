@@ -165,10 +165,15 @@ class ImplicitGrant extends AbstractAuthorizeGrant
             }
         }
 
-        $scopes = $this->getScopesFromRequest($request, false, $client->getRedirectUri());
+        $scopes = $this->getScopesFromRequest(
+            $request,
+            false,
+            $client->getRedirectUri(),
+            $this->defaultScope
+        );
 
         // Finalize the requested scopes
-        $scopes = $this->scopeRepository->finalizeScopes(
+        $finalizedScopes = $this->scopeRepository->finalizeScopes(
             $scopes,
             $this->getIdentifier(),
             $client
@@ -179,7 +184,7 @@ class ImplicitGrant extends AbstractAuthorizeGrant
         $authorizationRequest = new AuthorizationRequest();
         $authorizationRequest->setGrantTypeId($this->getIdentifier());
         $authorizationRequest->setClient($client);
-        $authorizationRequest->setScopes($scopes);
+        $authorizationRequest->setScopes($finalizedScopes);
 
         if ($redirectUri !== null) {
             $authorizationRequest->setRedirectUri($redirectUri);
@@ -225,7 +230,7 @@ class ImplicitGrant extends AbstractAuthorizeGrant
                 $this->makeRedirectUri(
                     $finalRedirectUri,
                     [
-                        'access_token' => (string) $accessToken->convertToJWT($this->privateKey),
+                        'access_token' => (string)$accessToken->convertToJWT($this->privateKey),
                         'token_type'   => 'bearer',
                         'expires_in'   => $expiresIn,
                         'state'        => $authorizationRequest->getState(),

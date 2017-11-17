@@ -61,6 +61,12 @@ class AuthorizationServer implements EventsAwareInterface
     protected $scopeRepository;
 
     /**
+     * The default scope for the authorization server.
+     * @var string
+     */
+    protected $defaultScope = '';
+
+    /**
      * @var string
      */
     protected $encryptionKey;
@@ -100,7 +106,7 @@ class AuthorizationServer implements EventsAwareInterface
      * Enable a grant type on the server.
      *
      * @param GrantTypeInterface $grantType
-     * @param null|DateInterval $accessTokenTTL
+     * @param null|DateInterval  $accessTokenTTL
      */
     public function enableGrantType(GrantTypeInterface $grantType, DateInterval $accessTokenTTL = null)
     {
@@ -109,6 +115,7 @@ class AuthorizationServer implements EventsAwareInterface
         $grantType->setAccessTokenRepository($this->accessTokenRepository);
         $grantType->setClientRepository($this->clientRepository);
         $grantType->setScopeRepository($this->scopeRepository);
+        $grantType->setDefaultScope($this->defaultScope);
         $grantType->setPrivateKey($this->privateKey);
         $grantType->setEventsManager($this->getEventsManager());
         $grantType->setEncryptionKey($this->encryptionKey);
@@ -155,7 +162,7 @@ class AuthorizationServer implements EventsAwareInterface
     /**
      * Return an access token response.
      *
-     * @param RequestInterface $request
+     * @param RequestInterface  $request
      * @param ResponseInterface $response
      *
      * @throws OAuthServerException
@@ -179,6 +186,17 @@ class AuthorizationServer implements EventsAwareInterface
         }
 
         throw OAuthServerException::unsupportedGrantType();
+    }
+
+    /**
+     * Set the default scope for the authorization server.
+     *
+     * @param string $defaultScope
+     * @return void
+     */
+    public function setDefaultScope(string $defaultScope)
+    {
+        $this->defaultScope = $defaultScope;
     }
 
     /**

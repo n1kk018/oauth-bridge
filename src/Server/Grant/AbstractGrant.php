@@ -57,6 +57,13 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
     protected $scopeRepository;
 
     /**
+     * The default scope for the current Grant Type.
+     *
+     * @var string|null
+     */
+    protected $defaultScope;
+
+    /**
      * @var AuthCodeRepositoryInterface
      */
     protected $authCodeRepository;
@@ -156,9 +163,20 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * @param string $defaultScope
+     * @return void
+     */
+    public function setDefaultScope(string $defaultScope)
+    {
+        $this->defaultScope = $defaultScope;
+    }
+
+    /**
      * Validate scopes in the request.
      *
-     * @param string $scopes
+     * @param string      $scopes
      * @param string|null $redirectUri
      *
      * @throws OAuthServerException
@@ -183,6 +201,10 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
             }
 
             $scopes[] = $scope;
+        }
+
+        if (empty($validScopes)) {
+            throw OAuthServerException::invalidScope($redirectUri);
         }
 
         return $scopes;

@@ -126,4 +126,12 @@ interface GrantTypeInterface extends EventsAwareInterface
      * @param string|null $key
      */
     public function setEncryptionKey($key = null);
+
+    /**
+     * Sets the default scope for the current Grant Type.
+     *
+     * @param string $defaultScope
+     * @return void
+     */
+    public function setDefaultScope(string $defaultScope);
 }
