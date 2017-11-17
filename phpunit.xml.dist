@@ -22,17 +22,17 @@
 >
 
     <testsuites>
-        <testsuite name="Server">
-            <directory suffix=".php">tests/Server</directory>
-        </testsuite>
-        <testsuite name="Exceptions">
-            <directory suffix=".php">tests/Exceptions</directory>
+        <testsuite name="oAuthBridge">
+            <directory suffix=".php">tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src</directory>
+            <exclude>
+                <directory suffix="Interface.php">src/</directory>
+            </exclude>
         </whitelist>
     </filter>
 
@@ -43,7 +43,14 @@
     </php>
 
     <logging>
-        <log type="coverage-text" target="php://stdout" lowUpperBound="60" highLowerBound="90"/>
-        <log type="coverage-clover" target="build/coverage/clover.xml"/>
+        <log
+            type="coverage-text"
+            target="php://stdout"
+            lowUpperBound="60"
+            highLowerBound="90"/>
+
+        <log
+            type="coverage-clover"
+            target="build/coverage.xml"/>
     </logging>
 </phpunit>
