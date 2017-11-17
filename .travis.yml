@@ -34,7 +34,17 @@ before_install:
 
 install:
   - bash tests/_ci/install-phalcon.sh
-  - composer install --prefer-dist --no-interaction --quiet --no-ansi --no-progress --optimize-autoloader --dev --no-suggest
+  - |
+    composer install \
+      --ignore-platform-reqs \
+      --prefer-dist \
+      --no-interaction \
+      --quiet \
+      --no-ansi \
+      --no-progress \
+      --optimize-autoloader \
+      --dev \
+      --no-suggest
   - $(phpenv which php) --ri phalcon
 
 script:
