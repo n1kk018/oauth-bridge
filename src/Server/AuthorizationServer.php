@@ -115,10 +115,13 @@ class AuthorizationServer implements EventsAwareInterface
         $grantType->setAccessTokenRepository($this->accessTokenRepository);
         $grantType->setClientRepository($this->clientRepository);
         $grantType->setScopeRepository($this->scopeRepository);
-        $grantType->setDefaultScope($this->defaultScope);
         $grantType->setPrivateKey($this->privateKey);
         $grantType->setEventsManager($this->getEventsManager());
         $grantType->setEncryptionKey($this->encryptionKey);
+
+        if ($this->defaultScope !== null) {
+            $grantType->setDefaultScope($this->defaultScope);
+        }
 
         $this->enabledGrantTypes[$grantType->getIdentifier()] = $grantType;
         $this->grantTypeAccessTokenTTL[$grantType->getIdentifier()] = $accessTokenTTL;
