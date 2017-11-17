@@ -20,4 +20,7 @@ The current version can be seen at [preferans.gitbooks.io](https://preferans.git
 oAuth Bridge is open source software licensed under the MIT License.
 See the [`LICENSE.txt`](LICENSE.txt) file for more.
 
-© 2017-present Serghei Iakovlev. All rights reserved.
+© 2017-present Serghei Iakovlev <br>
+© 2012-2017 Alex Bilbie <br>
+
+All rights reserved.
