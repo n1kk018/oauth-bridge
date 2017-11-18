@@ -204,7 +204,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
         }
 
         if (empty($validScopes)) {
-            throw OAuthServerException::invalidScope($this->defaultScope ?: 'null', $redirectUri);
+            throw OAuthServerException::invalidScope('', $redirectUri);
         }
 
         return $scopes;
