@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/preferans/oauth-bridge.svg?branch=master)](https://travis-ci.org/preferans/oauth-bridge)
 [![Latest Stable Version](https://poser.pugx.org/preferans/oauth-bridge/v/stable)](https://packagist.org/packages/preferans/oauth-bridge)
 [![Phalconist](https://phalconist.phalconphp.com/preferans/oauth-bridge/default.svg)](https://phalconist.phalconphp.com/preferans/oauth-bridge)
+[![Code Coverage](https://codecov.io/gh/preferans/oauth-bridge/branch/master/graph/badge.svg)](https://codecov.io/gh/preferans/oauth-bridge)
 
 A library focused on API Authentication for Phalcon applications.
 
