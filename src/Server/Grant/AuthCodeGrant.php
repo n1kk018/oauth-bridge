@@ -231,23 +231,22 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
         }
 
         $redirectUri = $this->getQueryStringParameter('redirect_uri', $request);
+        $clientRedirect = $client->getRedirectUri();
+
         if ($redirectUri !== null) {
-            if (is_string($client->getRedirectUri()) && (strcmp($client->getRedirectUri(), $redirectUri) !== 0)) {
+            if (is_string($clientRedirect) && (strcmp($clientRedirect, $redirectUri) !== 0)) {
                 $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
-            } elseif (is_array($client->getRedirectUri())
-                && in_array($redirectUri, $client->getRedirectUri()) === false
-            ) {
+            } elseif (is_array($clientRedirect) && in_array($redirectUri, $clientRedirect) === false) {
                 $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
                 throw OAuthServerException::invalidClient();
             }
+        } elseif (is_array($clientRedirect) && count($clientRedirect) !== 1 || empty($clientRedirect)) {
+            $this->getEventsManager()->fire(RequestEvent::CLIENT_AUTHENTICATION_FAILED, $request);
+            throw OAuthServerException::invalidClient();
         }
 
-        $defaultRedirectUri = is_array($client->getRedirectUri()) ?
-            $client->getRedirectUri()[0] :
-            $client->getRedirectUri();
-
-        $scopes = $this->getScopesFromRequest($request, true, $defaultRedirectUri, $this->defaultScope);
+        $scopes = $this->getScopesFromRequest($request, true, $clientRedirect, $this->defaultScope);
 
         $stateParameter = $this->getQueryStringParameter('state', $request);
 
