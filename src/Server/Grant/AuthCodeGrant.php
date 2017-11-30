@@ -90,7 +90,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
 
         // Validate the authorization code
         try {
-            $rawCodePayload = $this->getCrypt()->decrypt($encryptedAuthCode, $this->encryptionKey);
+            $rawCodePayload = $this->getCrypt()->decryptBase64($encryptedAuthCode, $this->encryptionKey, true);
 
             $authCodePayload = json_decode($rawCodePayload);
             $this->validateAuthCodePayload($authCodePayload);
@@ -342,7 +342,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 $this->makeRedirectUri(
                     $finalRedirectUri,
                     [
-                        'code'  => $this->getCrypt()->encryptBase64(json_encode($payload), $this->encryptionKey),
+                        'code'  => $this->getCrypt()->encryptBase64(json_encode($payload), $this->encryptionKey, true),
                         'state' => $authorizationRequest->getState(),
                     ]
                 )
