@@ -65,7 +65,7 @@ class BearerTokenResponse extends AbstractResponseType
                 ]
             );
 
-            $responseParams['refresh_token'] = $this->getCrypt()->encryptBase64($data, $this->encryptionKey);
+            $responseParams['refresh_token'] = $this->getCrypt()->encryptBase64($data, $this->encryptionKey,true);
         }
 
         $responseParams = array_merge($this->getExtraParams($this->accessToken), $responseParams);
