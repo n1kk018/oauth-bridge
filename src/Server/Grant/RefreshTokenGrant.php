@@ -56,7 +56,7 @@ class RefreshTokenGrant extends AbstractGrant
         // The OAuth spec says that a refreshed access token can have the original scopes
         // or fewer so ensure the request doesn't include any new scopes
         foreach ($scopes as $scope) {
-            if (!in_array($scope->getIdentifier(), $oldRefreshToken['scopes'])) {
+            if (!in_array($scope->getIdentifier(), explode(' ', $oldRefreshToken['scopes']))) {
                 throw OAuthServerException::invalidScope($scope->getIdentifier());
             }
         }
@@ -71,12 +71,12 @@ class RefreshTokenGrant extends AbstractGrant
                 }
 
                 return $scope;
-            }, $oldRefreshToken['scopes']);
+            }, explode(' ',$oldRefreshToken['scopes']));
         } else {
             // The OAuth spec says that a refreshed access token can have the original scopes or fewer so ensure
             // the request doesn't include any new scopes
             foreach ($scopes as $scope) {
-                if (in_array($scope->getIdentifier(), $oldRefreshToken['scopes']) === false) {
+                if (in_array($scope->getIdentifier(), explode(' ', $oldRefreshToken['scopes'])) === false) {
                     throw OAuthServerException::invalidScope($scope->getIdentifier());
                 }
             }
@@ -114,7 +114,7 @@ class RefreshTokenGrant extends AbstractGrant
 
         // Validate refresh token
         try {
-            $refreshToken = $this->getCrypt()->decrypt($encryptedRefreshToken, $this->encryptionKey);
+            $refreshToken = $this->getCrypt()->decryptBase64($encryptedRefreshToken, $this->encryptionKey, true);
         } catch (\Exception $e) {
             throw OAuthServerException::invalidRefreshToken('Cannot decrypt the refresh token');
         }
