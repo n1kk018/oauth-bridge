@@ -186,7 +186,7 @@ abstract class AbstractGrant extends Injectable implements GrantTypeInterface
     public function validateScopes($scopes, $redirectUri = null)
     {
         $scopesList = array_filter(
-            explode(self::SCOPE_DELIMITER_STRING, trim($scopes)),
+            is_array($scopes) ? $scopes :explode(self::SCOPE_DELIMITER_STRING, trim($scopes)),
             function ($scope) {
                 return !empty($scope);
             }
