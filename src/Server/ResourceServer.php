@@ -75,8 +75,21 @@ class ResourceServer
      *
      * @return RequestInterface
      */
+    /**
+     * Determine the access token validity.
+     *
+     * @param RequestInterface $request
+     *
+     * @throws OAuthServerException
+     *
+     * @return RequestInterface
+     */
     public function validateAuthenticatedRequest(RequestInterface $request)
     {
-        return $this->getAuthorizationValidator()->validateAuthorization($request);
+        try {
+            return $this->getAuthorizationValidator()->validateAuthorization($request);
+        } catch (OAuthException $e) {
+            throw $e;
+        }
     }
 }
