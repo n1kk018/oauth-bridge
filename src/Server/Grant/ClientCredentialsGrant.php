@@ -28,25 +28,30 @@ class ClientCredentialsGrant extends AbstractGrant
      * @throws OAuthServerException
      */
     public function respondToAccessTokenRequest(
-        RequestInterface $request,
-        ResponseTypeInterface $responseType,
-        DateInterval $accessTokenTTL
-    ) {
-        // Validate request
-        $client = $this->validateClient($request);
-        $scopes = $this->getScopesFromRequest($request, false, null, $this->defaultScope);
+       RequestInterface $request,
+       ResponseTypeInterface $responseType,
+       DateInterval $accessTokenTTL
+   ) {
+       // Validate request
+       $client = $this->validateClient($request);
+       $scopes = $this->getScopesFromRequest($request, false, null, $this->defaultScope);
 
-        // Finalize the requested scopes
-        $finalizedScopes = $this->scopeRepository->finalizeScopes($scopes, $this->getIdentifier(), $client);
+       // Finalize the requested scopes
+       $finalizedScopes = $this->scopeRepository->finalizeScopes($scopes, $this->getIdentifier(), $client);
 
-        // Issue and persist access token
-        $accessToken = $this->issueAccessToken($accessTokenTTL, $client, null, $finalizedScopes);
+       $userIdentifier = null;
+       foreach($scopes as $scope){
+           if( $scope->getIdentifier() === 'logas' ){
+               $userIdentifier = $this->getRequestParameter('user_identifier', $request, null);
+           }
+       }
+       // Issue and persist access token
+       $accessToken = $this->issueAccessToken($accessTokenTTL, $client, $userIdentifier, $finalizedScopes);
 
-        // Inject access token into response type
-        $responseType->setAccessToken($accessToken);
-
-        return $responseType;
-    }
+       // Inject access token into response type
+       $responseType->setAccessToken($accessToken);
+       return $responseType;
+   }
 
     /**
      * {@inheritdoc}
